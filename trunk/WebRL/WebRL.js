@@ -42,9 +42,6 @@ $(document).ready(function(){
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
-	msgLog.append("The player is trying to move... (Keypress " + e.keyCode + ")");
-	msgLog.renderToHtml();
-	
 	if (e.keyCode == 37) { // Left
 		player.tryMove(-1, 0);
 	}

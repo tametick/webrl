@@ -1,8 +1,8 @@
-var playerx = 0;
-var playery = 0;
+var player;
 var scr;
 
 $(document).ready(function(){
+	player = Player(0, 0);
 	scr = Screen(80, 24);
 	
 	for (var y = 0; y < 24; y++) 
@@ -15,18 +15,18 @@ $(document).ready(function(){
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
-	scr.setColoredChar(playerx, playery, ColoredChar('.', "red"));
+	scr.setColoredChar(player.x, player.y, ColoredChar('.', "red"));
 	
 	if (e.keyCode == 37) // Left
-		playerx--;
+		player.x--;
 	else if (e.keyCode == 38) // Up
-		playery--;
+		player.y--;
 	else if (e.keyCode == 39) // Right
-		playerx++;
+		player.x++;
 	else if (e.keyCode == 40) // Down
-		playery++;
+		player.y++;
 	
-	scr.setColoredChar(playerx, playery, ColoredChar('@', "blue"));
+	scr.setColoredChar(player.x, player.y, ColoredChar('@', "blue"));
 	scr.update();
 });
 
@@ -66,5 +66,12 @@ var Screen = function(width, height){
 	return {
 		setColoredChar: setColoredChar,
 		update: update,
+	}
+}
+
+var Player = function(x, y){
+	return {
+		x: x,
+		y: y
 	}
 }

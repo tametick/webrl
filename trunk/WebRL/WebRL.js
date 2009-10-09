@@ -1,6 +1,4 @@
 var scr;
-var creatures;
-var controllers;
 var player;
 var msgLog;
 
@@ -15,8 +13,6 @@ $(document).ready(function(){
 	scr = Screen(w, h);
 	msgLog = new MsgLog;
 	
-	creatures = new Array;
-	controllers = new Array;
 	
 	for (var x = 0; x < w; x++) {
 		for (var y = 0; y < h; y++) {
@@ -32,13 +28,13 @@ $(document).ready(function(){
 	}
 	
 	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100 );
-	creatures.push(player);
+	scr.creatures.push(player);
 	
 	var monster1 = Mobile(scr, 10,10, "Monster", ColoredChar("M",'red'), 10);
-	creatures.push(monster1);
+	scr.creatures.push(monster1);
 	
 	var hunter = new StraightWalkerAI(monster1, player);
-	controllers.push(hunter);
+	scr.controllers.push(hunter);
 	
 	updateDisplay();
 	
@@ -61,8 +57,8 @@ $(document).keypress(function(e){
 		player.tryMove(0, 1);
 	}
 	
-	for (i=0;i<controllers.length;i++)
-		controllers[i].think();
+	for (i=0;i<scr.controllers.length;i++)
+		scr.controllers[i].think();
 
 	updateDisplay();
 });
@@ -191,6 +187,10 @@ var Screen = function(width, height){
 	var s = '<table class="display" >';
 	var tiles = new Array();
 	var dirty = new Array();
+	var tickCounter = 0;
+	
+	var creatures = new Array();
+	var controllers = new Array();
 	
 	var addDirty = function(tile){
 		this.dirty.push([tile.x, tile.y]);
@@ -219,6 +219,8 @@ var Screen = function(width, height){
 	var rv = {
 		tiles: tiles,
 		dirty: dirty,
+		creatures: creatures,
+		controllers: controllers,
 		
 		paint: paint,
 		getTile: getTile,

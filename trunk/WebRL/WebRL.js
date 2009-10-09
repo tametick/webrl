@@ -21,6 +21,9 @@ $(document).ready(function(){
 	player = Mobile(scr, 2, 2, ColoredChar('@', 'blue'));
 	
 	scr.paint();
+    
+    // The the HTML file we're loaded
+    $("#loading_screen").html("");
 });
 
 $(document).keypress(function(e){

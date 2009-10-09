@@ -1,21 +1,20 @@
 var playerx = 0;
 var playery = 0;
 
-
 $(document).ready(function(){
 	Screen(80, 24);
 	
 	for (var y = 0; y < 24; y++) 
 		for (var x = 0; x < 80; x++) 
-			Screen.addColoredChar(x, y, new ColoredChar('.', "red"));
+			Screen.addColoredChar(x, y, ColoredChar('.', "red"));
 	
 	Screen.update();
 });
 
-document.onkeypress = function(e){
+$(document).keypress(function(e){
 	var e = window.event || e;
 	
-	Screen.addColoredChar(playerx, playery, new ColoredChar('.', "red"));
+	Screen.addColoredChar(playerx, playery, ColoredChar('.', "red"));
 	
 	if (e.keyCode == 37) // Left
 		playerx--;
@@ -26,25 +25,24 @@ document.onkeypress = function(e){
 	else if (e.keyCode == 40) // Down
 		playery++;
 	
-	Screen.addColoredChar(playerx, playery, new ColoredChar('@', "blue"));
+	Screen.addColoredChar(playerx, playery, ColoredChar('@', "blue"));
 	Screen.update();
+});
+
+var ColoredChar = function(ch, color){
+	var toString = function(){
+		var s = "<font color=\"" + this.color + "\">" + this.ch + "</font>";
+		return s;
+	};
+	return {
+		ch: ch,
+		color : color,
+		toString : toString
+	}
 }
 
-function ColoredChar(ch, color){
-	this.ch = ch;
-	this.color = color;
-}
-
-ColoredChar.prototype.toString = function(){
-	var s = "<font color=\"" + this.color + "\">" + this.ch + "</font>";
-	return s;
-}
-
-ColoredChar.prototype.fromString = function(){
-
-}
-
-function Screen(width, height){
+// TODO: closure-ify
+Screen = function(width, height){
 	Screen.width = width;
 	Screen.height = height;
 	
@@ -68,7 +66,7 @@ Screen.addColoredChar = function(x, y, cc){
 }
 
 Screen.update = function(){
-	for (var i in Screen.data)
+	for (var i in Screen.data) 
 		$("#tile" + i).html(Screen.data[i].toString());
 	
 	Screen.data = new Array();

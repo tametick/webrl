@@ -31,6 +31,9 @@ $(document).ready(function(){
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
+	msgLog.append("The player is trying to move... (Keypress "+e.keyCode+")");
+	msgLog.renderToHtml();
+	
 	if (e.keyCode == 37) { // Left
 		player.tryMove(-1, 0);
 	}
@@ -43,9 +46,6 @@ $(document).keypress(function(e){
 	else if (e.keyCode == 40) { // Down
 		player.tryMove(0, 1);
 	}
-	
-	msgLog.append("The player moved... (Keypress "+e.keyCode+")");
-	msgLog.renderToHtml();
 	
 	scr.paint();
 });
@@ -71,7 +71,8 @@ var Mobile = function(map, x, y, appearance){
 			this.tile = newtile;
 		}
 		else {
-			alert("Blocked!");
+			msgLog.append("Blocked!");
+			msgLog.renderToHtml();
 		}
 	}
 	

@@ -43,8 +43,6 @@ var ColoredChar = function(ch, color){
 }
 
 var Screen = function(width, height){
-	data = new Array();
-	
 	var s = '<table class="display" >';
 	for (var y = 0; y < height; y++) {
 		s += '<tr class="display">';
@@ -53,9 +51,9 @@ var Screen = function(width, height){
 		s += '</tr>';
 	}
 	s += '</table>';
-	
 	$("#screen").html(s);
 	
+	var data = new Array();
 	var setColoredChar = function(x, y, cc){
 		data["" + x + "_" + y] = cc;
 	};

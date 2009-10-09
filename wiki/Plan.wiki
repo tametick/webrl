@@ -16,4 +16,4 @@ Info about the map/dungeon/game world
 === Monsters ===
 List of monsters:
 
-M - big red *M*ichael
+M - big red Michael

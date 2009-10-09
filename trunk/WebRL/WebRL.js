@@ -6,9 +6,9 @@ $(document).ready(function(){
 	var w = 40, h = 20;
 	scr = Screen(w, h);
 	msgLog = new MsgLog;
-
-	for(var x = 0; x < w; x++) {
-		for(var y = 0; y < h; y++) {
+	
+	for (var x = 0; x < w; x++) {
+		for (var y = 0; y < h; y++) {
 			var tile;
 			if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
 				tile = Tile(scr, x, y, false, ColoredChar('#', 'cyan'));
@@ -21,17 +21,15 @@ $(document).ready(function(){
 	}
 	
 	player = Mobile(scr, 2, 2, ColoredChar('@', 'blue'));
-	
 	scr.paint();
-    
-    // The the HTML file we're loaded
-    $("#loading_screen").html("");
+	
+	$("#loading_screen").html("");
 });
 
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
-	msgLog.append("The player is trying to move... (Keypress "+e.keyCode+")");
+	msgLog.append("The player is trying to move... (Keypress " + e.keyCode + ")");
 	msgLog.renderToHtml();
 	
 	if (e.keyCode == 37) { // Left

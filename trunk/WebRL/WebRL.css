@@ -1,0 +1,25 @@
+font {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 1em;
+}
+
+table.display {
+    border-spacing: 0;
+    padding: 0;
+    margin: 0;
+    background-color: black;
+}
+
+tr.display {
+    border-spacing: 0;
+    padding: 0;
+    margin: 0;
+}
+
+td.display {
+    border-spacing: 0;
+    padding: 0;
+    margin: 0;
+    width: 2em;
+    text-align: center;
+}

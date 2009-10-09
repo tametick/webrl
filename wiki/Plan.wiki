@@ -4,6 +4,9 @@
 
 This page is gonna be hella important in determining the direction our roguelike goes. I propose that we hash stuff out in this discussion section, and any collective decisions can be compiled in the 'consensus' section. - BirdoPrey
 
+=== Genre ===
+What are you guys' opinions regarding genre? Are we sticking it out with a stock fantasy dungeon crawler? Or maybe a sci-fi thriller? Horror gorefest? Steampunk? Rape simulator? Post-modern surrealist dreamscape? Tell me your thoughts. - BirdoPrey
+
 
 
 = CONSENSUS =

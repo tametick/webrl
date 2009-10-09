@@ -75,7 +75,7 @@ var ColoredChar = function(ch, color){
 var Mobile = function(map, x, y, appearance){
 	var tryMove = function(dx, dy){
 		var newtile = this.tile.getNeighbour(dx, dy);
-		if (newtile != null && newtile.traversible) {
+		if (newtile != null && newtile.mayEnter( this ) ) {
 			this.tile.mobileLeave();
 			newtile.mobileEnter(this);
 			this.tile = newtile;
@@ -100,6 +100,16 @@ var Mobile = function(map, x, y, appearance){
 }
 
 var Tile = function(map, x, y, traversible, appearance){
+	var mayEnter = function(mob) {
+		if( !this.traversible ) {
+			return false;
+		}
+		if( this.mobile ) {
+			return false;
+		}
+		return true;
+	}
+
 	var mobileEnter = function(mob){
 		this.mobile = mob;
 		this.map.addDirty(this);
@@ -135,6 +145,7 @@ var Tile = function(map, x, y, traversible, appearance){
 		appearance: appearance,
 		mobile: null,
 		
+		mayEnter: mayEnter,
 		mobileEnter: mobileEnter,
 		mobileLeave: mobileLeave,
 		paint: paint,

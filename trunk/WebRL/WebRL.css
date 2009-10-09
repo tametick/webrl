@@ -23,3 +23,9 @@ td.display {
 	width: 2em;
 	text-align: center;
 }
+
+#msglog p {
+	font-size:small;
+	margin-bottom:0pt;
+	margin-top:2pt;
+}

@@ -1,4 +1,6 @@
 var scr;
+var creatures;
+var controllers;
 var player;
 var msgLog;
 
@@ -6,6 +8,9 @@ $(document).ready(function(){
 	var w = 40, h = 20;
 	scr = Screen(w, h);
 	msgLog = new MsgLog;
+	
+	creatures = new Array;
+	controllers = new Array;
 	
 	for (var x = 0; x < w; x++) {
 		for (var y = 0; y < h; y++) {
@@ -21,6 +26,14 @@ $(document).ready(function(){
 	}
 	
 	player = Mobile(scr, 2, 2, ColoredChar('@', 'blue'));
+	creatures.push(player);
+	
+	var monster1 = Mobile(scr, 10,10, ColoredChar("M",'red'));
+	creatures.push(monster1);
+	
+	var hunter = new StraightWalkerAI(monster1, player);
+	controllers.push(hunter);
+	
 	scr.paint();
 	
 	$("#loading_screen").html("");
@@ -45,6 +58,8 @@ $(document).keypress(function(e){
 		player.tryMove(0, 1);
 	}
 	
+	for (i=0;i<controllers.length;i++)
+		controllers[i].think();
 	scr.paint();
 });
 

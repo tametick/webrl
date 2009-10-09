@@ -3,12 +3,12 @@ var player;
 var msgLog;
 
 function updateDisplay() {
-	$("#hp-display").html( "" + player.hp + "/" + player.maxHp );
+	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
 	scr.paint();
 }
 
-$(document).ready(function(){
+$(document).ready(function() {
 	var w = 40, h = 20;
 	scr = Screen(w, h);
 	msgLog = new MsgLog;
@@ -19,18 +19,17 @@ $(document).ready(function(){
 			var tile;
 			if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
 				tile = Tile(scr, x, y, false, ColoredChar('#', 'cyan'));
-			}
-			else {
+			} else {
 				tile = Tile(scr, x, y, true, ColoredChar('.', 'red'));
 			}
 			scr.setTile(x, y, tile);
 		}
 	}
 	
-	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100 );
+	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
 	scr.creatures.push(player);
 	
-	var monster1 = Mobile(scr, 10,10, "Monster", ColoredChar("M",'red'), 10);
+	var monster1 = Mobile(scr, 10, 10, "Monster", ColoredChar("M", 'red'), 10);
 	scr.creatures.push(monster1);
 	
 	var hunter = new StraightWalkerAI(monster1, player, scr);
@@ -41,36 +40,36 @@ $(document).ready(function(){
 	$("#loading_screen").html("");
 });
 
-$(document).keypress(function(e){
+$(document).keypress(function(e) {
 	var e = window.event || e;
-
-	switch( e.keyCode ) {
+	
+	switch (e.keyCode) {
 		case 37:
-			player.tryMove( -1, 0 );
+			player.tryMove(-1, 0);
 			break;
 		case 38:
-			player.tryMove( 0, -1 );
+			player.tryMove(0, -1);
 			break;
 		case 39:
-			player.tryMove( 1, 0 );
+			player.tryMove(1, 0);
 			break;
 		case 40:
-			player.tryMove( 0, 1 );
+			player.tryMove(0, 1);
 			break;
 		default:
 			return true;
 	}
 	
-	for (i=0;i<scr.controllers.length;i++)
+	for (i = 0; i < scr.controllers.length; i++) 
 		scr.controllers[i].think();
-
+	
 	updateDisplay();
 	
 	return false;
 });
 
-var ColoredChar = function(ch, color){
-	var toString = function(){
+var ColoredChar = function(ch, color) {
+	var toString = function() {
 		var s = "<font color=\"" + this.color + "\">" + this.ch + "</font>";
 		return s;
 	};
@@ -81,37 +80,37 @@ var ColoredChar = function(ch, color){
 	}
 }
 
-var Mobile = function(map, x, y, name, appearance, maxHp){
-	var tryMove = function(dx, dy){
-		if( this.dead ) {
+var Mobile = function(map, x, y, name, appearance, maxHp) {
+	var tryMove = function(dx, dy) {
+		if (this.dead) {
 			return;
 		}
 		var newtile = this.tile.getNeighbour(dx, dy);
-		if (newtile != null && newtile.mayEnter( this ) ) {
+		if (newtile != null && newtile.mayEnter(this)) {
 			this.tile.mobileLeave();
 			newtile.mobileEnter(this);
 			this.tile = newtile;
-		} else if(newtile != null && newtile.mobile) {
-			this.tryAttack( newtile.mobile );
+		} else if (newtile != null && newtile.mobile) {
+			this.tryAttack(newtile.mobile);
 		} else {
 			msgLog.append("Blocked!");
 		}
 	}
-
-	var tryAttack = function( target ) {
+	
+	var tryAttack = function(target) {
 		var dmg = 1;
 		var desc = this.name + " attacks " + target.name + " for " + dmg + " damage!";
-		msgLog.append( desc );
-		target.damage( dmg );
+		msgLog.append(desc);
+		target.damage(dmg);
 	}
-
-	var damage = function( n ) {
+	
+	var damage = function(n) {
 		this.hp -= n;
-		if( this.hp < 0 ) {
+		if (this.hp < 0) {
 			var desc = this.name + " dies!";
 			this.tile.mobileLeave();
 			this.dead = true;
-			msgLog.append( desc );
+			msgLog.append(desc);
 		}
 	}
 	
@@ -134,41 +133,40 @@ var Mobile = function(map, x, y, name, appearance, maxHp){
 	return rv;
 }
 
-var Tile = function(map, x, y, traversible, appearance){
+var Tile = function(map, x, y, traversible, appearance) {
 	var mayEnter = function(mob) {
-		if( !this.traversible ) {
+		if (!this.traversible) {
 			return false;
 		}
-		if( this.mobile ) {
+		if (this.mobile) {
 			return false;
 		}
 		return true;
 	}
-
-	var mobileEnter = function(mob){
+	
+	var mobileEnter = function(mob) {
 		this.mobile = mob;
 		this.map.addDirty(this);
 	}
 	
-	var mobileLeave = function(){
+	var mobileLeave = function() {
 		this.mobile = null;
 		this.map.addDirty(this);
 	}
 	
-	var getNeighbour = function(dx, dy){
+	var getNeighbour = function(dx, dy) {
 		return this.map.getTile(this.x + dx, this.y + dy);
 	}
 	
-	var paint = function(){
+	var paint = function() {
 		if (this.mobile) {
 			this.map.putTile(this.x, this.y, this.mobile.appearance);
-		}
-		else {
+		} else {
 			this.map.putTile(this.x, this.y, this.appearance);
 		}
 	}
 	
-	var toString = function(){
+	var toString = function() {
 		return "Tile(" + this.x + "," + this.y + ")";
 	}
 	
@@ -189,7 +187,7 @@ var Tile = function(map, x, y, traversible, appearance){
 	}
 }
 
-var Screen = function(width, height){
+var Screen = function(width, height) {
 	var s = '<table class="display" >';
 	var tiles = new Array();
 	var dirty = new Array();
@@ -198,27 +196,27 @@ var Screen = function(width, height){
 	var creatures = new Array();
 	var controllers = new Array();
 	
-	var addDirty = function(tile){
+	var addDirty = function(tile) {
 		this.dirty.push([tile.x, tile.y]);
 	}
 	
-	var paint = function(){
+	var paint = function() {
 		while (this.dirty.length > 0) {
 			var xy = this.dirty.pop();
 			this.tiles[xy].paint();
 		}
 	}
 	
-	var setTile = function(x, y, tile){
+	var setTile = function(x, y, tile) {
 		this.tiles[[x, y]] = tile;
 		this.dirty.push([x, y]);
 	}
 	
-	var putTile = function(x, y, appearance){
+	var putTile = function(x, y, appearance) {
 		$("#tile" + x + "_" + y).html(appearance.toString());
 	}
 	
-	var getTile = function(x, y){
+	var getTile = function(x, y) {
 		return this.tiles[[x, y]];
 	}
 	

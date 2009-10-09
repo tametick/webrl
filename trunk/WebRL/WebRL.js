@@ -172,10 +172,3 @@ var Screen = function(width, height){
 	return rv;
 	
 }
-
-var Entity = function(x, y){
-	return {
-		x: x,
-		y: y
-	}
-}

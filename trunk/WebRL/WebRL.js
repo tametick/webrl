@@ -7,7 +7,7 @@ $(document).ready(function(){
 	
 	for (var y = 0; y < 24; y++) 
 		for (var x = 0; x < 80; x++) 
-			scr.addColoredChar(x, y, ColoredChar('.', "red"));
+			scr.setColoredChar(x, y, ColoredChar('.', "red"));
 	
 	scr.update();
 });
@@ -15,7 +15,7 @@ $(document).ready(function(){
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
-	scr.addColoredChar(playerx, playery, ColoredChar('.', "red"));
+	scr.setColoredChar(playerx, playery, ColoredChar('.', "red"));
 	
 	if (e.keyCode == 37) // Left
 		playerx--;
@@ -26,7 +26,7 @@ $(document).keypress(function(e){
 	else if (e.keyCode == 40) // Down
 		playery++;
 	
-	scr.addColoredChar(playerx, playery, ColoredChar('@', "blue"));
+	scr.setColoredChar(playerx, playery, ColoredChar('@', "blue"));
 	scr.update();
 });
 
@@ -56,7 +56,7 @@ var Screen = function(width, height){
 	
 	$("#screen").html(s);
 	
-	var addColoredChar = function(x, y, cc){
+	var setColoredChar = function(x, y, cc){
 		data["" + x + "_" + y] = cc;
 	};
 	var update = function(){
@@ -66,7 +66,7 @@ var Screen = function(width, height){
 	};
 	
 	return {
-		addColoredChar: addColoredChar,
+		setColoredChar: setColoredChar,
 		update: update,
 	}
 }

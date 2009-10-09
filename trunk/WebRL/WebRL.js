@@ -1,20 +1,21 @@
 var playerx = 0;
 var playery = 0;
+var scr;
 
 $(document).ready(function(){
-	Screen(80, 24);
+	scr = Screen(80, 24);
 	
 	for (var y = 0; y < 24; y++) 
 		for (var x = 0; x < 80; x++) 
-			Screen.addColoredChar(x, y, ColoredChar('.', "red"));
+			scr.addColoredChar(x, y, ColoredChar('.', "red"));
 	
-	Screen.update();
+	scr.update();
 });
 
 $(document).keypress(function(e){
 	var e = window.event || e;
 	
-	Screen.addColoredChar(playerx, playery, ColoredChar('.', "red"));
+	scr.addColoredChar(playerx, playery, ColoredChar('.', "red"));
 	
 	if (e.keyCode == 37) // Left
 		playerx--;
@@ -25,8 +26,8 @@ $(document).keypress(function(e){
 	else if (e.keyCode == 40) // Down
 		playery++;
 	
-	Screen.addColoredChar(playerx, playery, ColoredChar('@', "blue"));
-	Screen.update();
+	scr.addColoredChar(playerx, playery, ColoredChar('@', "blue"));
+	scr.update();
 });
 
 var ColoredChar = function(ch, color){
@@ -36,18 +37,13 @@ var ColoredChar = function(ch, color){
 	};
 	return {
 		ch: ch,
-		color : color,
-		toString : toString
+		color: color,
+		toString: toString
 	}
 }
 
-// TODO: closure-ify
-Screen = function(width, height){
-	Screen.width = width;
-	Screen.height = height;
-	
-	// This will hold all the updated cells.
-	Screen.data = new Array();
+var Screen = function(width, height){
+	data = new Array();
 	
 	var s = '<table class="display" >';
 	for (var y = 0; y < height; y++) {
@@ -58,16 +54,19 @@ Screen = function(width, height){
 	}
 	s += '</table>';
 	
-	$("#screen").html(s)
-}
-
-Screen.addColoredChar = function(x, y, cc){
-	Screen.data["" + x + "_" + y] = cc;
-}
-
-Screen.update = function(){
-	for (var i in Screen.data) 
-		$("#tile" + i).html(Screen.data[i].toString());
+	$("#screen").html(s);
 	
-	Screen.data = new Array();
+	var addColoredChar = function(x, y, cc){
+		data["" + x + "_" + y] = cc;
+	};
+	var update = function(){
+		for (var i in data) 
+			$("#tile" + i).html(data[i].toString());
+		data = new Array();
+	};
+	
+	return {
+		addColoredChar: addColoredChar,
+		update: update,
+	}
 }

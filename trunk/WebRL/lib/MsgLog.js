@@ -1,6 +1,3 @@
-/**
- * @author michael
- */
 function MsgLog(){
     this._logBuffer = 100;
     this._visibleLogBuffer = 5;

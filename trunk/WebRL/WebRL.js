@@ -43,24 +43,30 @@ $(document).ready(function(){
 
 $(document).keypress(function(e){
 	var e = window.event || e;
-	
-	if (e.keyCode == 37) { // Left
-		player.tryMove(-1, 0);
-	}
-	else if (e.keyCode == 38) { // Up
-		player.tryMove(0, -1);
-	}
-	else if (e.keyCode == 39) { // Right
-		player.tryMove(1, 0);
-	}
-	else if (e.keyCode == 40) { // Down
-		player.tryMove(0, 1);
+
+	switch( e.keyCode ) {
+		case 37:
+			player.tryMove( -1, 0 );
+			break;
+		case 38:
+			player.tryMove( 0, -1 );
+			break;
+		case 39:
+			player.tryMove( 1, 0 );
+			break;
+		case 40:
+			player.tryMove( 0, 1 );
+			break;
+		default:
+			return true;
 	}
 	
 	for (i=0;i<scr.controllers.length;i++)
 		scr.controllers[i].think();
 
 	updateDisplay();
+	
+	return false;
 });
 
 var ColoredChar = function(ch, color){

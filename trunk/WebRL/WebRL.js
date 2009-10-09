@@ -4,6 +4,12 @@ var controllers;
 var player;
 var msgLog;
 
+function updateDisplay() {
+	$("#hp-display").html( "" + player.hp + "/" + player.maxHp );
+	msgLog.renderToHtml();
+	scr.paint();
+}
+
 $(document).ready(function(){
 	var w = 40, h = 20;
 	scr = Screen(w, h);
@@ -25,16 +31,16 @@ $(document).ready(function(){
 		}
 	}
 	
-	player = Mobile(scr, 2, 2, ColoredChar('@', 'blue'));
+	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100 );
 	creatures.push(player);
 	
-	var monster1 = Mobile(scr, 10,10, ColoredChar("M",'red'));
+	var monster1 = Mobile(scr, 10,10, "Monster", ColoredChar("M",'red'), 10);
 	creatures.push(monster1);
 	
 	var hunter = new StraightWalkerAI(monster1, player);
 	controllers.push(hunter);
 	
-	scr.paint();
+	updateDisplay();
 	
 	$("#loading_screen").html("");
 });
@@ -57,7 +63,8 @@ $(document).keypress(function(e){
 	
 	for (i=0;i<controllers.length;i++)
 		controllers[i].think();
-	scr.paint();
+
+	updateDisplay();
 });
 
 var ColoredChar = function(ch, color){
@@ -72,17 +79,37 @@ var ColoredChar = function(ch, color){
 	}
 }
 
-var Mobile = function(map, x, y, appearance){
+var Mobile = function(map, x, y, name, appearance, maxHp){
 	var tryMove = function(dx, dy){
+		if( this.dead ) {
+			return;
+		}
 		var newtile = this.tile.getNeighbour(dx, dy);
 		if (newtile != null && newtile.mayEnter( this ) ) {
 			this.tile.mobileLeave();
 			newtile.mobileEnter(this);
 			this.tile = newtile;
-		}
-		else {
+		} else if(newtile != null && newtile.mobile) {
+			this.tryAttack( newtile.mobile );
+		} else {
 			msgLog.append("Blocked!");
-			msgLog.renderToHtml();
+		}
+	}
+
+	var tryAttack = function( target ) {
+		var dmg = 1;
+		var desc = this.name + " attacks " + target.name + " for " + dmg + " damage!";
+		msgLog.append( desc );
+		target.damage( dmg );
+	}
+
+	var damage = function( n ) {
+		this.hp -= n;
+		if( this.hp < 0 ) {
+			var desc = this.name + " dies!";
+			this.tile.mobileLeave();
+			this.dead = true;
+			msgLog.append( desc );
 		}
 	}
 	
@@ -90,8 +117,14 @@ var Mobile = function(map, x, y, appearance){
 		map: map,
 		tile: map.getTile(x, y),
 		appearance: appearance,
+		maxHp: maxHp,
+		hp: maxHp,
+		dead: false,
+		name: name,
 		
 		tryMove: tryMove,
+		tryAttack: tryAttack,
+		damage: damage,
 	};
 	
 	map.getTile(x, y).mobileEnter(rv);
@@ -208,3 +241,4 @@ var Screen = function(width, height){
 	return rv;
 	
 }
+

@@ -2,7 +2,7 @@ var player;
 var scr;
 
 $(document).ready(function(){
-	player = Player(0, 0);
+	player = Entity(0, 0);
 	scr = Screen(80, 24);
 	
 	for (var y = 0; y < 24; y++) 
@@ -69,7 +69,7 @@ var Screen = function(width, height){
 	}
 }
 
-var Player = function(x, y){
+var Entity = function(x, y){
 	return {
 		x: x,
 		y: y

@@ -1,4 +1,4 @@
-#summary THE PLAN
+#summary The plan and design of the game
 
 DiscussionPage
 

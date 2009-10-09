@@ -1,13 +1,9 @@
 #summary THE PLAN
 
-= Introduction =
+= DISCUSSION =
 
-Add your content here.
+This page is gonna be hella important in determining the direction our roguelike goes. I propose that we hash stuff out in this discussion section, and any collective decisions can be compiled in the 'consensus' section. - BirdoPrey
 
 
-= Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+= CONSENSUS =

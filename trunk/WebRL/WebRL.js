@@ -55,7 +55,7 @@ function Screen(width, height){
 	for (var y = 0; y < height; y++) {
 		s += '<tr class="display">';
 		for (var x = 0; x < width; x++) 
-			s += '<td class="display" id="tile' + x + "," + y + '"></td>';
+			s += '<td class="display" id="tile' + x + "_" + y + '"></td>';
 		s += '</tr>';
 	}
 	s += '</table>';
@@ -64,14 +64,12 @@ function Screen(width, height){
 }
 
 Screen.addColoredChar = function(x, y, cc){
-	Screen.data["" + x + "," + y] = cc;
+	Screen.data["" + x + "_" + y] = cc;
 }
 
 Screen.update = function(){
-	for (var i in Screen.data) {
-		document.getElementById("tile" + i).innerHTML = Screen.data[i];
-		//$("#tile" + i).html(Screen.data[i]); <- does't work
-	}
+	for (var i in Screen.data)
+		$("#tile" + i).html(Screen.data[i].toString());
 	
 	Screen.data = new Array();
 }

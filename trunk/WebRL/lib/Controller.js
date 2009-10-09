@@ -1,5 +1,6 @@
-function Controller(toControl) {
+function Controller(toControl,livesIn) {
 	this.puppet = toControl;
+	this.map = livesIn;
 }
 
 Controller.prototype.move = function(deltaX, deltaY) {
@@ -15,8 +16,8 @@ Controller.prototype.think = function() {
 RandomWalkAI.prototype = Controller;
 RandomWalkAI.constructor = RandomWalkAI;
 
-function RandomWalkAI(toControl) {
-	Controller.call(this);
+function RandomWalkAI(toControl, livesIn) {
+	Controller.call(this, toControl, livesIn);
 }
 
 RandomWalkAI.prototype.think = function() {
@@ -28,8 +29,8 @@ RandomWalkAI.prototype.think = function() {
 StraightWalkerAI.prototype = Controller;
 StraightWalkerAI.constructor = StraightWalkerAI;
 
-function StraightWalkerAI(toControl, setToHunt) {
-	Controller.call(this, toControl);
+function StraightWalkerAI(toControl, setToHunt, livesIn) {
+	Controller.call(this, toControl, livesIn);
 	//StraightWalkerAI.baseConstructor.call(toControl);
 	
 	this.toHunt = setToHunt;

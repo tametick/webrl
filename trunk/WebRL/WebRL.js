@@ -33,7 +33,7 @@ $(document).ready(function(){
 	var monster1 = Mobile(scr, 10,10, "Monster", ColoredChar("M",'red'), 10);
 	scr.creatures.push(monster1);
 	
-	var hunter = new StraightWalkerAI(monster1, player);
+	var hunter = new StraightWalkerAI(monster1, player, scr);
 	scr.controllers.push(hunter);
 	
 	updateDisplay();

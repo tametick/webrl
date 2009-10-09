@@ -1,7 +1,8 @@
 var playerx = 0;
 var playery = 0;
 
-function main(){
+
+$(document).ready(function(){
 	Screen(80, 24);
 	
 	for (var y = 0; y < 24; y++) 
@@ -9,7 +10,7 @@ function main(){
 			Screen.addColoredChar(x, y, new ColoredChar('.', "red"));
 	
 	Screen.update();
-}
+});
 
 document.onkeypress = function(e){
 	var e = window.event || e;
@@ -59,7 +60,7 @@ function Screen(width, height){
 	}
 	s += '</table>';
 	
-	document.getElementById("screen").innerHTML = s;
+	$("#screen").html(s)
 }
 
 Screen.addColoredChar = function(x, y, cc){
@@ -67,8 +68,10 @@ Screen.addColoredChar = function(x, y, cc){
 }
 
 Screen.update = function(){
-	for (var i in Screen.data) 
+	for (var i in Screen.data) {
 		document.getElementById("tile" + i).innerHTML = Screen.data[i];
+		//$("#tile" + i).html(Screen.data[i]); <- does't work
+	}
 	
 	Screen.data = new Array();
 }

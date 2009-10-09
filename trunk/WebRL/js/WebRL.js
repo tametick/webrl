@@ -27,13 +27,20 @@ $(document).ready(function() {
 	}
 	
 	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
+	player.fraction = -1;
 	scr.creatures.push(player);
 	
-	var monster1 = Mobile(scr, 10, 10, "Monster", ColoredChar("M", 'red'), 10);
-	scr.creatures.push(monster1);
-	
-	var hunter = new StraightWalkerAI(monster1, player, scr);
-	scr.controllers.push(hunter);
+	for (var fraction = 0; fraction < 4; fraction++) {
+		for (var monster = 0; monster < 4; monster++) {
+			var monster1 = Mobile(scr, 7+monster*8, 2+fraction*5, "Monster", ColoredChar("M", 5000+fraction*4300), Math.random()*10+10);
+			monster1.fraction = fraction;
+			scr.creatures.push(monster1);
+			
+			
+			var hunter = new KillAllAI(monster1, scr);
+			scr.controllers.push(hunter);
+		}
+	}
 	
 	updateDisplay();
 	
@@ -104,12 +111,17 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		target.damage(dmg);
 	}
 	
+	var distanceTo = function(other) {
+		return Math.max(Math.abs(this.tile.x - other.tile.x), Math.abs(this.tile.y - other.tile.y));
+	}	
+	
 	var damage = function(n) {
 		this.hp -= n;
 		if (this.hp < 0) {
 			var desc = this.name + " dies!";
 			this.tile.mobileLeave();
 			this.dead = true;
+			
 			msgLog.append(desc);
 		}
 	}
@@ -122,9 +134,10 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		hp: maxHp,
 		dead: false,
 		name: name,
-		
+		fraction : 0,
 		tryMove: tryMove,
 		tryAttack: tryAttack,
+		distanceTo: distanceTo,
 		damage: damage,
 	};
 	

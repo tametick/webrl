@@ -68,8 +68,9 @@ $(document).keypress(function(e) {
 			return true;
 	}
 	
-	for (i = 0; i < scr.controllers.length; i++) 
+	for (i = 0; i < scr.controllers.length; i++) {
 		scr.controllers[i].think();
+	}
 	
 	updateDisplay();
 	
@@ -122,7 +123,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 			var desc = this.name + " dies!";
 			this.tile.mobileLeave();
 			this.dead = true;
-			
+			this.map.removeCreature( this );
 			msgLog.append(desc);
 		}
 	}
@@ -233,6 +234,29 @@ var Screen = function(width, height) {
 	var getTile = function(x, y) {
 		return this.tiles[[x, y]];
 	}
+
+	var removeCreature = function( creature ) {
+		var i = 0;
+		while( i < this.creatures.length && this.creatures[i] != creature ) {
+			++i;
+		}
+		if( i < this.creatures.length ) {
+			this.creatures.splice( i,1 );
+		}
+
+		i = 0;
+		while( i < this.controllers.length && this.controllers[i].puppet != creature ) {
+			++i;
+		}
+		if( i < this.controllers.length ) {
+			this.controllers.splice( i,1 );
+		}
+
+		if( creature.tile != null ) {
+			creature.tile.mobileLeave();
+			creature.tile = null;
+		}
+	}
 	
 	var rv = {
 		tiles: tiles,
@@ -245,6 +269,7 @@ var Screen = function(width, height) {
 		setTile: setTile,
 		putTile: putTile,
 		addDirty: addDirty,
+		removeCreature: removeCreature,
 	};
 	
 	for (var y = 0; y < height; y++) {

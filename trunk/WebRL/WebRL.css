@@ -1,4 +1,5 @@
 body {
+	text-align: center;
 	background-color: gray;
 }
 
@@ -40,6 +41,8 @@ table.display {
 	padding: 0;
 	margin: 0;
 	background-color: black;
+	margin-left: auto;
+    margin-right: auto;
 }
 
 tr.display {

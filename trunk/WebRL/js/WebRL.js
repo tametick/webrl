@@ -204,12 +204,12 @@ var Tile = function(map, x, y, traversible, appearance) {
 
 var Screen = function(width, height) {
 	var s = '<table class="display" >';
-	var tiles = new Array();
-	var dirty = new Array();
+	var tiles = [];
+	var dirty = [];
 	var tickCounter = 0;
 	
-	var creatures = new Array();
-	var controllers = new Array();
+	var creatures = [];
+	var controllers = [];
 	
 	var addDirty = function(tile) {
 		this.dirty.push([tile.x, tile.y]);

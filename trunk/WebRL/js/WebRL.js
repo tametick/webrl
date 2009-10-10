@@ -18,7 +18,7 @@ $(document).ready(function() {
 		for (var y = 0; y < h; y++) {
 			var tile;
 			if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-				tile = Tile(scr, x, y, false, ColoredChar('#', 'cyan'));
+				tile = Tile(scr, x, y, false, ColoredChar('#', 'aqua'));
 			} else {
 				tile = Tile(scr, x, y, true, ColoredChar('.', 'red'));
 			}
@@ -30,12 +30,13 @@ $(document).ready(function() {
 	player.fraction = -1;
 	scr.creatures.push(player);
 	
+	var factions = ['darkRed', 'lightRed',  'darkGreen', 'lightGreen'];
+	
 	for (var fraction = 0; fraction < 4; fraction++) {
 		for (var monster = 0; monster < 4; monster++) {
-			var monster1 = Mobile(scr, 7 + monster * 8, 2 + fraction * 5, "Monster", ColoredChar("M", 5000 + fraction * 4300), Math.random() * 10 + 10);
+			var monster1 = Mobile(scr, 7 + monster * 8, 2 + fraction * 5, "Monster", ColoredChar("M", factions[fraction]), Math.random() * 10 + 10);
 			monster1.fraction = fraction;
 			scr.creatures.push(monster1);
-			
 			
 			var hunter = new KillAllAI(monster1, scr);
 			scr.controllers.push(hunter);
@@ -75,14 +76,14 @@ $(document).keypress(function(e) {
 	return false;
 });
 
-var ColoredChar = function(ch, color) {
+var ColoredChar = function(ch, charClass) {
 	var toString = function() {
-		var s = "<font color=\"" + this.color + "\">" + this.ch + "</font>";
+		var s = "<font class=\"" + this.charClass + "\">" + this.ch + "</font>";
 		return s;
 	};
 	return {
 		ch: ch,
-		color: color,
+		charClass: charClass,
 		toString: toString
 	}
 }

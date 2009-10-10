@@ -1,6 +1,38 @@
+body {
+	background-color: gray;
+}
+
 font {
 	font-family: "Courier New", Courier, monospace;
 	font-size: 1em;
+}
+
+font.blue {
+	color: blue;
+}
+
+font.aqua {
+	color: aqua;
+}
+
+font.red {
+	color: red;
+}
+
+font.darkRed {
+	color: #8B0000;
+}
+
+font.lightRed {
+	color: #FF6347;
+}
+
+font.darkGreen {
+	color: #006400;
+}
+
+font.lightGreen {
+	color: #90EE90;
 }
 
 table.display {

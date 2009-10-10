@@ -78,7 +78,7 @@ $(document).keypress(function(e) {
 
 var ColoredChar = function(ch, charClass) {
 	var toString = function() {
-		var s = "<font class=\"" + this.charClass + "\">" + this.ch + "</font>";
+		var s = "<span class=\"" + this.charClass + "\">" + this.ch + "</span>";
 		return s;
 	};
 	return {

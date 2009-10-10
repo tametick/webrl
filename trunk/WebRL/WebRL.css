@@ -2,36 +2,36 @@ body {
 	background-color: gray;
 }
 
-font {
+span {
 	font-family: "Courier New", Courier, monospace;
 	font-size: 1em;
 }
 
-font.blue {
+span.blue {
 	color: blue;
 }
 
-font.aqua {
+span.aqua {
 	color: aqua;
 }
 
-font.red {
+span.red {
 	color: red;
 }
 
-font.darkRed {
+span.darkRed {
 	color: #8B0000;
 }
 
-font.lightRed {
+span.lightRed {
 	color: #FF6347;
 }
 
-font.darkGreen {
+span.darkGreen {
 	color: #006400;
 }
 
-font.lightGreen {
+span.lightGreen {
 	color: #90EE90;
 }
 

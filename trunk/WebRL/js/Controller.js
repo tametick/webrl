@@ -69,10 +69,10 @@ KillAllAI.prototype.think = function() {
 			
 			var curDistance = mon.distanceTo(this.puppet);
 			// prefer player... hack!!!!! :-)
-			if (mon.fraction == -1) 
+			if (mon.faction == -1) 
 				curDistance = curDistance / 2;
 			
-			if ((mon.fraction != this.puppet.fraction) && (curDistance <= distance)) {
+			if ((mon.faction != this.puppet.faction) && (curDistance <= distance)) {
 				this.toHunt = mon;
 				distance = curDistance;
 			}

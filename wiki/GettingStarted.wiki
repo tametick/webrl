@@ -1,19 +1,19 @@
 #summary How to start developing WebRL
 
-= Getting Write Access =
+== Getting Write Access ==
 
 Write access to the source base is given very liberally - simply ask one of the project owners & you will probably get it.
 
 
-= Getting the source =
+== Getting the source ==
 
 Look at the [http://code.google.com/p/webrl/source/checkout Source] tab on instructions regarding checkout from the Subversion repository.
 
-= Developing =
+== Developing ==
 
 You can use your favorite editor or IDE to develop WebRL - it is only JavaScript, HTML & CSS.  However, a lot of us use Aptana.
 
-== Step by step guide to developing WebRL in Aptana ==
+=== Step by step guide to developing WebRL in Aptana ===
 
 * Download [http://www.aptana.org/studio/download Aptana Studio].
 * Don't forget to choose the jQuery JavaScript/AJAX plugin when prompted for extra plugins to install.

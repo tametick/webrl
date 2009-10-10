@@ -15,8 +15,7 @@ You can use your favorite editor or IDE to develop WebRL - it is only JavaScript
 
 === Step by step guide to developing WebRL in Aptana ===
 
- # Download [http://www.aptana.org/studio/download Aptana Studio].
- # Don't forget to choose the jQuery JavaScript/AJAX plugin when prompted for extra plugins to install.
+ # Download [http://www.aptana.org/studio/download Aptana Studio] (Don't forget to choose the jQuery JavaScript/AJAX plugin when prompted for extra plugins to install).
  # Start Aptana and choose File->Import.
  # SVN->checkout project from SVN.
  # URL is https://webrl.googlecode.com/svn/trunk/ (or with http if you don't have write access - just ask and you will be give one).

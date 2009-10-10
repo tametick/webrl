@@ -76,14 +76,14 @@ $(document).keypress(function(e) {
 	return false;
 });
 
-var ColoredChar = function(ch, charClass) {
+var ColoredChar = function(ch, charColor) {
 	var toString = function() {
-		var s = "<span class=\"" + this.charClass + "\">" + this.ch + "</span>";
+		var s = "<span class=\"" + this.charColor + "\">" + this.ch + "</span>";
 		return s;
 	};
 	return {
 		ch: ch,
-		charClass: charClass,
+		charColor: charColor,
 		toString: toString
 	}
 }

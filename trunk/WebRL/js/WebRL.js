@@ -1,45 +1,47 @@
 var scr;
+var maps;
 var player;
 var msgLog;
 
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
-	scr.paint();
+	maps.getCurrentMap().paint();
 }
 
 $(document).ready(function() {
 	var w = 40, h = 20;
+	maps = Maps(Map(w, h));
 	scr = Screen(w, h);
 	msgLog = new MsgLog;
 	
-	
+	var currentMap = maps.getCurrentMap();
 	for (var x = 0; x < w; x++) {
 		for (var y = 0; y < h; y++) {
 			var tile;
 			if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-				tile = Tile(scr, x, y, false, ColoredChar('#', 'aqua'));
+				tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
 			} else {
-				tile = Tile(scr, x, y, true, ColoredChar('.', 'red'));
+				tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
 			}
-			scr.setTile(x, y, tile);
+			currentMap.setTile(x, y, tile);
 		}
 	}
 	
-	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
+	player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
 	player.faction = new Faction('player');
-	scr.creatures.push(player);
+	currentMap.creatures.push(player);
 	
 	var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
 	
 	for (var faction = 0; faction < 4; faction++) {
 		for (var monster = 0; monster < 4; monster++) {
-			var monster1 = Mobile(scr, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
+			var monster1 = Mobile(currentMap, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
 			monster1.faction = new Faction(faction);
-			scr.creatures.push(monster1);
+			currentMap.creatures.push(monster1);
 			
-			var hunter = new KillAllAI(monster1, scr);
-			scr.controllers.push(hunter);
+			var hunter = new KillAllAI(monster1, currentMap);
+			currentMap.controllers.push(hunter);
 		}
 	}
 	
@@ -68,8 +70,8 @@ $(document).keypress(function(e) {
 			return true;
 	}
 	
-	for (i = 0; i < scr.controllers.length; i++) {
-		scr.controllers[i].think();
+	for (i = 0; i < maps.getCurrentMap().controllers.length; i++) {
+		maps.getCurrentMap().controllers[i].think();
 	}
 	
 	updateDisplay();
@@ -175,9 +177,9 @@ var Tile = function(map, x, y, traversible, appearance) {
 	
 	var paint = function() {
 		if (this.mobile) {
-			this.map.putTile(this.x, this.y, this.mobile.appearance);
+			scr.putCell(this.x, this.y, this.mobile.appearance);
 		} else {
-			this.map.putTile(this.x, this.y, this.appearance);
+			scr.putCell(this.x, this.y, this.appearance);
 		}
 	}
 	
@@ -202,8 +204,7 @@ var Tile = function(map, x, y, traversible, appearance) {
 	}
 }
 
-var Screen = function(width, height) {
-	var s = '<table class="display" >';
+var Map = function(width, height) {
 	var tiles = [];
 	var dirty = [];
 	var tickCounter = 0;
@@ -226,11 +227,7 @@ var Screen = function(width, height) {
 		this.tiles[[x, y]] = tile;
 		this.dirty.push([x, y]);
 	}
-	
-	var putTile = function(x, y, appearance) {
-		$("#tile" + x + "_" + y).html(appearance.toString());
-	}
-	
+
 	var getTile = function(x, y) {
 		return this.tiles[[x, y]];
 	}
@@ -258,7 +255,7 @@ var Screen = function(width, height) {
 		}
 	}
 	
-	var rv = {
+	return {
 		tiles: tiles,
 		dirty: dirty,
 		creatures: creatures,
@@ -267,21 +264,48 @@ var Screen = function(width, height) {
 		paint: paint,
 		getTile: getTile,
 		setTile: setTile,
-		putTile: putTile,
 		addDirty: addDirty,
 		removeCreature: removeCreature,
 	};
+}
+
+var Maps = function(firstMap) {
+	var mapList = [firstMap];
+	
+	var getMap = function(mapIndex) {
+		return mapList[mapIndex];
+	}
+	
+	var getCurrentMap = function() {
+		return mapList[mapList.length - 1];
+	}
+	
+	return {
+		mapList: mapList,
+		getMap: getMap,
+		getCurrentMap: getCurrentMap,
+	}
+}
+
+var Screen = function(width, height) {
+	var s = '<table class="display" >';
 	
 	for (var y = 0; y < height; y++) {
 		s += '<tr class="display">';
 		for (var x = 0; x < width; x++) {
 			s += '<td class="display" id="tile' + x + "_" + y + '"></td>';
-			tiles[[x, y]] = null;
 		}
 		s += '</tr>';
 	}
 	s += '</table>';
 	$("#screen").html(s);
 	
-	return rv;
+		
+	var putCell = function(x, y, appearance) {
+		$("#tile" + x + "_" + y).html(appearance.toString());
+	}
+	
+	return {
+		putCell: putCell,
+	};
 }

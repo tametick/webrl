@@ -19,6 +19,6 @@ You can use your favorite editor or IDE to develop WebRL - it is only JavaScript
  # Start Aptana and choose File->Import.
  # SVN->checkout project from SVN.
  # URL is https://webrl.googlecode.com/svn/trunk/ (or with http if you don't have write access - just ask and you will be give one).
- # Username and password can be seen here(need to be logged into Google Code): http://code.google.com/p/webrl/source/checkout.
+ # Username and password can be seen here (need to be logged into Google Code): http://code.google.com/p/webrl/source/checkout.
  # Choose the WebRL folder.
- # Start coding! index.html is the natural place to look at first.
+ # Start coding! [http://code.google.com/p/webrl/source/browse/trunk/WebRL/index.html index.html] is the natural place to look at first.

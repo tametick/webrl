@@ -27,15 +27,15 @@ $(document).ready(function() {
 	}
 	
 	player = Mobile(scr, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
-	player.faction = -1;
+	player.faction = new Faction('player');
 	scr.creatures.push(player);
 	
-	var factions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
+	var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
 	
 	for (var faction = 0; faction < 4; faction++) {
 		for (var monster = 0; monster < 4; monster++) {
-			var monster1 = Mobile(scr, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", factions[faction]), Math.random() * 10 + 10);
-			monster1.faction = faction;
+			var monster1 = Mobile(scr, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
+			monster1.faction = new Faction(faction);
 			scr.creatures.push(monster1);
 			
 			var hunter = new KillAllAI(monster1, scr);
@@ -136,7 +136,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		hp: maxHp,
 		dead: false,
 		name: name,
-		faction: 0,
+		faction: null,
 		tryMove: tryMove,
 		tryAttack: tryAttack,
 		distanceTo: distanceTo,

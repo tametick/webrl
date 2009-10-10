@@ -32,7 +32,7 @@ $(document).ready(function() {
 	
 	for (var fraction = 0; fraction < 4; fraction++) {
 		for (var monster = 0; monster < 4; monster++) {
-			var monster1 = Mobile(scr, 7+monster*8, 2+fraction*5, "Monster", ColoredChar("M", 5000+fraction*4300), Math.random()*10+10);
+			var monster1 = Mobile(scr, 7 + monster * 8, 2 + fraction * 5, "Monster", ColoredChar("M", 5000 + fraction * 4300), Math.random() * 10 + 10);
 			monster1.fraction = fraction;
 			scr.creatures.push(monster1);
 			
@@ -113,7 +113,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 	
 	var distanceTo = function(other) {
 		return Math.max(Math.abs(this.tile.x - other.tile.x), Math.abs(this.tile.y - other.tile.y));
-	}	
+	}
 	
 	var damage = function(n) {
 		this.hp -= n;
@@ -134,7 +134,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		hp: maxHp,
 		dead: false,
 		name: name,
-		fraction : 0,
+		fraction: 0,
 		tryMove: tryMove,
 		tryAttack: tryAttack,
 		distanceTo: distanceTo,
@@ -258,6 +258,4 @@ var Screen = function(width, height) {
 	$("#screen").html(s);
 	
 	return rv;
-	
 }
-

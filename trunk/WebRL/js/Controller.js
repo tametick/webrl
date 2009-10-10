@@ -52,7 +52,7 @@ KillAllAI.prototype = Controller;
 KillAllAI.constructor = KillAllAI;
 
 function KillAllAI(toControl, livesIn) {
-	Controller.call(this,  toControl, livesIn);
+	Controller.call(this, toControl, livesIn);
 	this.toHunt = null;
 }
 
@@ -61,30 +61,30 @@ KillAllAI.prototype.think = function() {
 	if (this.toHunt == null) {
 		var list = this.map.creatures;
 		var distance = 100;
-		for (var i=0;i<list.length;i++) {
+		for (var i = 0; i < list.length; i++) {
 			var mon = list[i];
-			if (mon.dead)
-			 continue;
-			 
+			if (mon.dead) 
+				continue;
+			
 			
 			var curDistance = mon.distanceTo(this.puppet);
 			// prefer player... hack!!!!! :-)
-			if (mon.fraction == -1)
-				curDistance = curDistance/2;
+			if (mon.fraction == -1) 
+				curDistance = curDistance / 2;
 			
-			if ( (mon.fraction != this.puppet.fraction) && (curDistance <= distance)) {
+			if ((mon.fraction != this.puppet.fraction) && (curDistance <= distance)) {
 				this.toHunt = mon;
 				distance = curDistance;
 			}
 		}
 	}
-	if (this.toHunt == null)
+	if (this.toHunt == null) 
 		return;
-		
+	
 	if (this.toHunt.dead == true) {
 		this.toHunt = null;
 		return;
-	} 
+	}
 	var dx = this.toHunt.tile.x - this.puppet.tile.x;
 	var dy = this.toHunt.tile.y - this.puppet.tile.y;
 	

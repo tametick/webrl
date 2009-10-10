@@ -30,7 +30,7 @@ $(document).ready(function() {
 	player.faction = -1;
 	scr.creatures.push(player);
 	
-	var factions = ['darkRed', 'lightRed', 'darkGreen', 'lightGreen'];
+	var factions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
 	
 	for (var faction = 0; faction < 4; faction++) {
 		for (var monster = 0; monster < 4; monster++) {

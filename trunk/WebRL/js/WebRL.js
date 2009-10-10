@@ -30,7 +30,7 @@ $(document).ready(function() {
 	player.faction = -1;
 	scr.creatures.push(player);
 	
-	var factions = ['darkRed', 'lightRed',  'darkGreen', 'lightGreen'];
+	var factions = ['darkRed', 'lightRed', 'darkGreen', 'lightGreen'];
 	
 	for (var faction = 0; faction < 4; faction++) {
 		for (var monster = 0; monster < 4; monster++) {
@@ -123,7 +123,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 			var desc = this.name + " dies!";
 			this.tile.mobileLeave();
 			this.dead = true;
-			this.map.removeCreature( this );
+			this.map.removeCreature(this);
 			msgLog.append(desc);
 		}
 	}
@@ -234,25 +234,25 @@ var Screen = function(width, height) {
 	var getTile = function(x, y) {
 		return this.tiles[[x, y]];
 	}
-
-	var removeCreature = function( creature ) {
+	
+	var removeCreature = function(creature) {
 		var i = 0;
-		while( i < this.creatures.length && this.creatures[i] != creature ) {
+		while (i < this.creatures.length && this.creatures[i] != creature) {
 			++i;
 		}
-		if( i < this.creatures.length ) {
-			this.creatures.splice( i,1 );
+		if (i < this.creatures.length) {
+			this.creatures.splice(i, 1);
 		}
-
+		
 		i = 0;
-		while( i < this.controllers.length && this.controllers[i].puppet != creature ) {
+		while (i < this.controllers.length && this.controllers[i].puppet != creature) {
 			++i;
 		}
-		if( i < this.controllers.length ) {
-			this.controllers.splice( i,1 );
+		if (i < this.controllers.length) {
+			this.controllers.splice(i, 1);
 		}
-
-		if( creature.tile != null ) {
+		
+		if (creature.tile != null) {
 			creature.tile.mobileLeave();
 			creature.tile = null;
 		}

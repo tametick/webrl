@@ -1,7 +1,7 @@
 function MsgLog() {
 	this.logBuffer = 100;
 	this.visibleLogBuffer = 5;
-	this.data = new Array();
+	this.data = [];
 }
 
 /* a very generic method to append data to a log */

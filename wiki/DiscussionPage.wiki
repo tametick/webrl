@@ -1,3 +1,3 @@
 #summary Discussion Page
 
-[2009.10.10] Ido: This is the place to discuss your ideas!
+<2009.10.10> Ido: This is the place to discuss your ideas!

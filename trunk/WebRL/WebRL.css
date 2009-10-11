@@ -142,10 +142,11 @@ span.yellowGreen  { color: #9ACD32; }
 body {
 	text-align: center;
 	background-color: gray;
+	font-size:100%;
 }
 
 span {
-	font-family: "Courier New", Courier, monospace;
+	font-family: monospace;
 	font-size: 1em;
 }
 

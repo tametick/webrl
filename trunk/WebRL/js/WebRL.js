@@ -9,6 +9,28 @@ function updateDisplay() {
 	maps.getCurrentMap().paint();
 }
 
+function startLoad() {
+	$("#loading_screen").html("Loading, please wait...");
+	$("#screen").hide();
+	$("#hp-display").hide();
+	$("#msglog").hide();
+}
+
+function nextLoad(func) {
+	setTimeout(func, 1);
+	$("#loading_screen").html($("#loading_screen").html() + "...");
+}
+
+function finishLoad(func) {
+	setTimeout(func, 1);
+	setTimeout(function() {
+		$("#screen").show();
+		$("#hp-display").show();
+		$("#msglog").show();
+		$("#loading_screen").html("");
+	}, 1);
+}
+
 $(document).ready(function() {
 	var w = 40, h = 20;
 	maps = Maps(Map(w, h));
@@ -16,38 +38,43 @@ $(document).ready(function() {
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
-	for (var x = 0; x < w; x++) {
-		for (var y = 0; y < h; y++) {
-			var tile;
-			if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-				tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
-			} else {
-				tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
-			}
-			currentMap.setTile(x, y, tile);
-		}
-	}
 	
-	player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
-	player.faction = new Faction('player');
-	currentMap.creatures.push(player);
+	startLoad();
+	
+	nextLoad(function() {
+		for (var x = 0; x < w; x++) {
+			for (var y = 0; y < h; y++) {
+				var tile;
+				if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
+					tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
+				} else {
+					tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
+				}
+				currentMap.setTile(x, y, tile);
+			}
+		}
+		
+		player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
+		player.faction = new Faction('player');
+		currentMap.creatures.push(player);
+	});
 	
 	var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
 	
-	for (var faction = 0; faction < 4; faction++) {
-		for (var monster = 0; monster < 4; monster++) {
-			var monster1 = Mobile(currentMap, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
-			monster1.faction = new Faction(faction);
-			currentMap.creatures.push(monster1);
-			
-			var hunter = new KillAllAI(monster1, currentMap);
-			currentMap.controllers.push(hunter);
+	finishLoad(function() {
+		for (var faction = 0; faction < 4; faction++) {
+			for (var monster = 0; monster < 4; monster++) {
+				var monster1 = Mobile(currentMap, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
+				monster1.faction = new Faction(faction);
+				currentMap.creatures.push(monster1);
+				
+				var hunter = new KillAllAI(monster1, currentMap);
+				currentMap.controllers.push(hunter);
+			}
 		}
-	}
-	
-	updateDisplay();
-	
-	$("#loading_screen").html("");
+		
+		updateDisplay();
+	});
 });
 
 $(document).keypress(function(e) {
@@ -72,24 +99,30 @@ $(document).keypress(function(e) {
 			//
 			switch (e.charCode) {
 				case 114: // 'r'
-					maps.mapList.push(Map(40, 20));
+					startLoad();
 					
-					var currentMap = maps.getCurrentMap();
-					for (var x = 0; x < 80; x++) {
-						for (var y = 0; y < 24; y++) {
-							var tile;
-							if (x == 0 || y == 0 || x == (40 - 1) || y == (20 - 1)) {
-								tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
-							} else {
-								tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
+					finishLoad(function() {
+						maps.mapList.push(Map(40, 20));
+						
+						var currentMap = maps.getCurrentMap();
+						for (var x = 0; x < 80; x++) {
+							for (var y = 0; y < 24; y++) {
+								var tile;
+								if (x == 0 || y == 0 || x == (40 - 1) || y == (20 - 1)) {
+									tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
+								} else {
+									tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
+								}
+								currentMap.setTile(x, y, tile);
 							}
-							currentMap.setTile(x, y, tile);
 						}
-					}
-					player.changeMap(currentMap, 2, 2);
-					
-					msgLog.append("Entered dungeon level: " + maps.mapList.length);
-					break;
+						player.changeMap(currentMap, 2, 2);
+						
+						msgLog.append("Entered dungeon level: " + maps.mapList.length);
+						
+						updateDisplay();
+					});
+					return false;
 				default:
 					return true;
 			}

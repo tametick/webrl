@@ -1,13 +1,3 @@
-body {
-	text-align: center;
-	background-color: gray;
-}
-
-span {
-	font-family: "Courier New", Courier, monospace;
-	font-size: 1em;
-}
-
 span.aliceBlue  { color: #F0F8FF; }
 span.antiqueWhite  { color: #FAEBD7; }
 span.aqua  { color: #00FFFF; }
@@ -149,13 +139,23 @@ span.whiteSmoke  { color: #F5F5F5; }
 span.yellow  { color: #FFFF00; }
 span.yellowGreen  { color: #9ACD32; }
 
+body {
+	text-align: center;
+	background-color: gray;
+}
+
+span {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 1em;
+}
+
 table.display {
 	border-spacing: 0;
 	padding: 0;
 	margin: 0;
 	background-color: black;
 	margin-left: auto;
-    margin-right: auto;
+	margin-right: auto;
 }
 
 tr.display {

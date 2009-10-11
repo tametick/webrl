@@ -94,9 +94,7 @@ $(document).keypress(function(e) {
 			player.tryMove(0, 1);
 			break;
 		default:
-			//
 			// Test code, generates a new level after pressing 'r'
-			//
 			switch (e.charCode) {
 				case 114: // 'r'
 					startLoad();
@@ -128,8 +126,6 @@ $(document).keypress(function(e) {
 			}
 			break;
 	}
-	
-	
 	
 	for (i = 0; i < maps.getCurrentMap().controllers.length; i++) {
 		maps.getCurrentMap().controllers[i].think();
@@ -298,7 +294,7 @@ var Map = function(width, height) {
 		this.tiles[[x, y]] = tile;
 		this.dirty.push([x, y]);
 	}
-
+	
 	var getTile = function(x, y) {
 		return this.tiles[[x, y]];
 	}
@@ -371,7 +367,7 @@ var Screen = function(width, height) {
 	s += '</table>';
 	$("#screen").html(s);
 	
-		
+	
 	var putCell = function(x, y, appearance) {
 		$("#tile" + x + "_" + y).html(appearance.toString());
 	}

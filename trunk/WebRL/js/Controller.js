@@ -1,5 +1,4 @@
 // creature/player factions
-
 function Faction(type) {
 	this.type = type;
 }
@@ -9,7 +8,6 @@ Faction.prototype.isHostileTo = function(faction) {
 }
 
 // base ai class
-
 function Controller(toControl, livesIn) {
 	this.puppet = toControl;
 	this.map = livesIn;
@@ -24,7 +22,6 @@ Controller.prototype.think = function() {
 }
 
 // random walk AI
-
 RandomWalkAI.prototype = Controller;
 RandomWalkAI.constructor = RandomWalkAI;
 
@@ -37,14 +34,11 @@ RandomWalkAI.prototype.think = function() {
 }
 
 // straight hunter AI
-
 StraightWalkerAI.prototype = Controller;
 StraightWalkerAI.constructor = StraightWalkerAI;
 
 function StraightWalkerAI(toControl, setToHunt, livesIn) {
 	Controller.call(this, toControl, livesIn);
-	//StraightWalkerAI.baseConstructor.call(toControl);
-	
 	this.toHunt = setToHunt;
 }
 
@@ -59,7 +53,6 @@ StraightWalkerAI.prototype.think = function() {
 }
 
 // straight hunter AI
-
 KillAllAI.prototype = Controller;
 KillAllAI.constructor = KillAllAI;
 
@@ -78,9 +71,8 @@ KillAllAI.prototype.think = function() {
 			if (mon.dead) 
 				continue;
 			
-			
 			var curDistance = mon.distanceTo(this.puppet);
-			// prefer player... hack!!!!! :-)
+			// prefer player
 			if (mon.faction.type == 'player') 
 				curDistance = curDistance / 2;
 			
@@ -105,4 +97,3 @@ KillAllAI.prototype.think = function() {
 	if (dy != 0) 
 		Controller.prototype.move.call(this, 0, dy / Math.abs(dy));
 }
-

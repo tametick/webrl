@@ -4,13 +4,12 @@ function MsgLog() {
 	this.data = [];
 }
 
-/* a very generic method to append data to a log */
+// a very generic method to append data to a log
 MsgLog.prototype.append = function(toAdd) {
 	this.data.push(toAdd);
 	if (this.data.length > this.logBuffer) {
 		this.data.shift();
 	}
-	
 }
 
 MsgLog.prototype.renderToHtml = function() {

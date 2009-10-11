@@ -9,28 +9,6 @@ function updateDisplay() {
 	maps.getCurrentMap().paint();
 }
 
-function startLoad() {
-	$("#loading_screen").html("Loading, please wait...");
-	$("#screen").hide();
-	$("#hp-display").hide();
-	$("#msglog").hide();
-}
-
-function nextLoad(func) {
-	setTimeout(func, 1);
-	$("#loading_screen").html($("#loading_screen").html() + "...");
-}
-
-function finishLoad(func) {
-	setTimeout(func, 1);
-	setTimeout(function() {
-		$("#screen").show();
-		$("#hp-display").show();
-		$("#msglog").show();
-		$("#loading_screen").html("");
-	}, 1);
-}
-
 $(document).ready(function() {
 	var w = 40, h = 20;
 	maps = Maps(Map(w, h));
@@ -39,25 +17,30 @@ $(document).ready(function() {
 	
 	var currentMap = maps.getCurrentMap();
 	
-	var mapGen = MapGen();
-	mapGen.map = currentMap;
-	
-	startLoad();
+	var mapGen = MapGen(currentMap);
 	
 	// If one portion of map generation is used in a load sequence,
 	// all steps of the map generation must also be part of the load
 	// sequence.
 	
-	nextLoad(function() { mapGen.generateMap(w, h, 'test'); });
+	var loader = LoadingScreen(function() {
+		mapGen.generateMap(w, h, 'test');
+	},
 	
-	nextLoad(function() {
+	function() {
 		player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
 		player.faction = new Faction('player');
+	},
+	
+	function() {
+		mapGen.populateMap('test');
+	},
+	
+	function() {
+		updateDisplay();
 	});
 	
-	nextLoad(function() { mapGen.populateMap('test'); });
-	
-	finishLoad(function() { updateDisplay(); });
+	loader.load();
 });
 
 $(document).keypress(function(e) {
@@ -80,29 +63,21 @@ $(document).keypress(function(e) {
 			// Test code, generates a new level after pressing 'r'
 			switch (e.charCode) {
 				case 114: // 'r'
-					startLoad();
-					
-					finishLoad(function() {
+					var loader = LoadingScreen(function() {
 						maps.mapList.push(Map(40, 20));
+						var mapGen = MapGen(maps.getCurrentMap());
 						
-						var currentMap = maps.getCurrentMap();
-						for (var x = 0; x < 80; x++) {
-							for (var y = 0; y < 24; y++) {
-								var tile;
-								if (x == 0 || y == 0 || x == (40 - 1) || y == (20 - 1)) {
-									tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
-								} else {
-									tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
-								}
-								currentMap.setTile(x, y, tile);
-							}
-						}
-						player.changeMap(currentMap, 2, 2);
+						mapGen.generateMap(40, 20, 'test');
+						player.changeMap(mapGen.map, 2, 2);
 						
 						msgLog.append("Entered dungeon level: " + maps.mapList.length);
-						
+					},
+					
+					function() {
 						updateDisplay();
 					});
+					
+					loader.load();
 					return false;
 				default:
 					return true;
@@ -118,6 +93,42 @@ $(document).keypress(function(e) {
 	
 	return false;
 });
+
+// Call with LoadingScreen(func1, func2, func3), this class
+// will store the functions and the execute them after
+// using .load(). In order for the DOM to update, control
+// has to be given back to the browser. This achieves that.
+var LoadingScreen = function() {
+	var funcs = arguments;
+	
+	// This can eventually be changed to add a modern overlay
+	// load.
+	var load = function() {
+		// Hide everything.
+		$("#loading_screen").html("Loading, please wait...");
+		$("#screen").hide();
+		$("#hp-display").hide();
+		$("#msglog").hide();
+		
+		// For each function except last, put in queue.
+		for (var i = 0; i < funcs.length - 1; ++i) {
+			setTimeout(funcs[i], 1);
+			$("#loading_screen").html($("#loading_screen").html() + "...");
+		}
+		
+		setTimeout(funcs[funcs.length - 1], 1);
+		setTimeout(function() {
+			$("#screen").show();
+			$("#hp-display").show();
+			$("#msglog").show();
+			$("#loading_screen").html("");
+		}, 1);
+	}
+	
+	return {
+		load: load,
+	};
+}
 
 var ColoredChar = function(ch, charColor) {
 	var toString = function() {

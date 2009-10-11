@@ -81,9 +81,9 @@ var Maps = function(firstMap) {
 	};
 }
 
-var MapGen = function() {
-	var map = null;
-	var seed = null;
+var MapGen = function(map, seed) {
+	var map = map || null;
+	var seed = seed || null;
 	
 	// The args could be anything, really.
 	var generateMap = function(w, h, args) {
@@ -118,8 +118,6 @@ var MapGen = function() {
 					this.map.controllers.push(hunter);
 				}
 			}
-			
-			updateDisplay();
 		}
 	}
 	

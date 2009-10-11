@@ -39,42 +39,25 @@ $(document).ready(function() {
 	
 	var currentMap = maps.getCurrentMap();
 	
+	var mapGen = MapGen();
+	mapGen.map = currentMap;
+	
 	startLoad();
 	
+	// If one portion of map generation is used in a load sequence,
+	// all steps of the map generation must also be part of the load
+	// sequence.
+	
+	nextLoad(function() { mapGen.generateMap(w, h, 'test'); });
+	
 	nextLoad(function() {
-		for (var x = 0; x < w; x++) {
-			for (var y = 0; y < h; y++) {
-				var tile;
-				if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-					tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
-				} else {
-					tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
-				}
-				currentMap.setTile(x, y, tile);
-			}
-		}
-		
 		player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
 		player.faction = new Faction('player');
-		currentMap.creatures.push(player);
 	});
 	
-	var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
+	nextLoad(function() { mapGen.populateMap('test'); });
 	
-	finishLoad(function() {
-		for (var faction = 0; faction < 4; faction++) {
-			for (var monster = 0; monster < 4; monster++) {
-				var monster1 = Mobile(currentMap, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
-				monster1.faction = new Faction(faction);
-				currentMap.creatures.push(monster1);
-				
-				var hunter = new KillAllAI(monster1, currentMap);
-				currentMap.controllers.push(hunter);
-			}
-		}
-		
-		updateDisplay();
-	});
+	finishLoad(function() { updateDisplay(); });
 });
 
 $(document).keypress(function(e) {
@@ -213,6 +196,7 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 	};
 	
 	map.getTile(x, y).mobileEnter(rv);
+	map.creatures.push(rv);
 	
 	return rv;
 }
@@ -268,89 +252,6 @@ var Tile = function(map, x, y, traversible, appearance) {
 		paint: paint,
 		toString: toString,
 		getNeighbour: getNeighbour,
-	}
-}
-
-var Map = function(width, height) {
-	var tiles = [];
-	var dirty = [];
-	var tickCounter = 0;
-	
-	var creatures = [];
-	var controllers = [];
-	
-	var addDirty = function(tile) {
-		this.dirty.push([tile.x, tile.y]);
-	}
-	
-	var paint = function() {
-		while (this.dirty.length > 0) {
-			var xy = this.dirty.pop();
-			this.tiles[xy].paint();
-		}
-	}
-	
-	var setTile = function(x, y, tile) {
-		this.tiles[[x, y]] = tile;
-		this.dirty.push([x, y]);
-	}
-	
-	var getTile = function(x, y) {
-		return this.tiles[[x, y]];
-	}
-	
-	var removeCreature = function(creature) {
-		var i = 0;
-		while (i < this.creatures.length && this.creatures[i] != creature) {
-			++i;
-		}
-		if (i < this.creatures.length) {
-			this.creatures.splice(i, 1);
-		}
-		
-		i = 0;
-		while (i < this.controllers.length && this.controllers[i].puppet != creature) {
-			++i;
-		}
-		if (i < this.controllers.length) {
-			this.controllers.splice(i, 1);
-		}
-		
-		if (creature.tile != null) {
-			creature.tile.mobileLeave();
-			creature.tile = null;
-		}
-	}
-	
-	return {
-		tiles: tiles,
-		dirty: dirty,
-		creatures: creatures,
-		controllers: controllers,
-		
-		paint: paint,
-		getTile: getTile,
-		setTile: setTile,
-		addDirty: addDirty,
-		removeCreature: removeCreature,
-	};
-}
-
-var Maps = function(firstMap) {
-	var mapList = [firstMap];
-	
-	var getMap = function(mapIndex) {
-		return mapList[mapIndex];
-	}
-	
-	var getCurrentMap = function() {
-		return mapList[mapList.length - 1];
-	}
-	
-	return {
-		mapList: mapList,
-		getMap: getMap,
-		getCurrentMap: getCurrentMap,
 	}
 }
 

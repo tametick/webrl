@@ -67,8 +67,36 @@ $(document).keypress(function(e) {
 			player.tryMove(0, 1);
 			break;
 		default:
-			return true;
+			//
+			// Test code, generates a new level after pressing 'r'
+			//
+			switch (e.charCode) {
+				case 114: // 'r'
+					maps.mapList.push(Map(40, 20));
+					
+					var currentMap = maps.getCurrentMap();
+					for (var x = 0; x < 80; x++) {
+						for (var y = 0; y < 24; y++) {
+							var tile;
+							if (x == 0 || y == 0 || x == (40 - 1) || y == (20 - 1)) {
+								tile = Tile(currentMap, x, y, false, ColoredChar('#', 'aqua'));
+							} else {
+								tile = Tile(currentMap, x, y, true, ColoredChar('.', 'red'));
+							}
+							currentMap.setTile(x, y, tile);
+						}
+					}
+					player.changeMap(currentMap, 2, 2);
+					
+					msgLog.append("Entered dungeon level: " + maps.mapList.length);
+					break;
+				default:
+					return true;
+			}
+			break;
 	}
+	
+	
 	
 	for (i = 0; i < maps.getCurrentMap().controllers.length; i++) {
 		maps.getCurrentMap().controllers[i].think();
@@ -108,6 +136,14 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		}
 	}
 	
+	var changeMap = function(map, x, y) {
+		this.map.removeCreature(this);
+		this.map = map;
+		this.tile = this.map.getTile(x, y);
+		this.tile.mobileEnter(this);
+		this.map.creatures.push(this);
+	}
+	
 	var tryAttack = function(target) {
 		var dmg = 1;
 		var desc = this.name + " attacks " + target.name + " for " + dmg + " damage!";
@@ -139,7 +175,9 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		dead: false,
 		name: name,
 		faction: null,
+		
 		tryMove: tryMove,
+		changeMap: changeMap,
 		tryAttack: tryAttack,
 		distanceTo: distanceTo,
 		damage: damage,

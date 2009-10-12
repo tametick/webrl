@@ -104,8 +104,11 @@ var LoadingScreen = function() {
 	// This can eventually be changed to add a modern overlay
 	// load.
 	var load = function() {
+		var message = "Loading, please wait...<br />";
+		var numSteps = funcs.length;
+	
 		// Hide everything.
-		$("#loading_screen").html("Loading, please wait...");
+		$("#loading_screen").html(message);
 		$("#screen").hide();
 		$("#hp-display").hide();
 		$("#msglog").hide();
@@ -113,7 +116,7 @@ var LoadingScreen = function() {
 		// For each function except last, put in queue.
 		for (var i = 0; i < funcs.length - 1; ++i) {
 			setTimeout(funcs[i], 1);
-			$("#loading_screen").html($("#loading_screen").html() + "...");
+			$("#loading_screen").html(message + ((i+1) / numSteps * 100) + "%");
 		}
 		
 		setTimeout(funcs[funcs.length - 1], 1);
@@ -182,7 +185,6 @@ var Mobile = function(name, appearance, maxHp, faction) {
 		this.hp -= n;
 		if (this.hp < 0) {
 			var desc = this.name + " dies!";
-			this.tile.mobileLeave();
 			this.dead = true;
 			this.map.removeCreature(this);
 			msgLog.append(desc);

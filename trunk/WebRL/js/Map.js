@@ -47,6 +47,15 @@ var Map = function(width, height) {
 			creature.tile.mobileLeave();
 			creature.tile = null;
 		}
+		
+		creature.map = null;
+	}
+	
+	var addCreature = function(creature, x, y) {
+		this.getTile(x, y).mobileEnter(creature);
+		this.creatures.push(creature);
+		creature.tile = this.getTile(x, y);
+		creature.map = this;
 	}
 	
 	return {
@@ -60,6 +69,7 @@ var Map = function(width, height) {
 		setTile: setTile,
 		addDirty: addDirty,
 		removeCreature: removeCreature,
+		addCreature: addCreature,
 	};
 }
 
@@ -111,8 +121,8 @@ var MapGen = function(map, seed) {
 	
 			for (var faction = 0; faction < 4; faction++) {
 				for (var monster = 0; monster < 4; monster++) {
-					var monster1 = Mobile(this.map, 7 + monster * 8, 2 + faction * 5, "Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10);
-					monster1.faction = new Faction(faction);
+					var monster1 = Mobile("Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10, new Faction(faction));
+					this.map.addCreature(monster1, 7 + monster * 8, 2 + faction * 5);
 					
 					var hunter = new KillAllAI(monster1, this.map);
 					this.map.controllers.push(hunter);

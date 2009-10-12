@@ -28,8 +28,8 @@ $(document).ready(function() {
 	},
 	
 	function() {
-		player = Mobile(currentMap, 2, 2, "Player", ColoredChar('@', 'blue'), 100);
-		player.faction = new Faction('player');
+		player = Mobile("Player", ColoredChar('@', 'blue'), 100, new Faction('player'));
+		mapGen.map.addCreature(player, 2, 2);
 	},
 	
 	function() {
@@ -142,7 +142,7 @@ var ColoredChar = function(ch, charColor) {
 	}
 }
 
-var Mobile = function(map, x, y, name, appearance, maxHp) {
+var Mobile = function(name, appearance, maxHp, faction) {
 	var tryMove = function(dx, dy) {
 		if (this.dead) {
 			return;
@@ -190,14 +190,14 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 	}
 	
 	var rv = {
-		map: map,
-		tile: map.getTile(x, y),
+		map: null,
+		tile: null,
 		appearance: appearance,
 		maxHp: maxHp,
 		hp: maxHp,
 		dead: false,
 		name: name,
-		faction: null,
+		faction: faction,
 		
 		tryMove: tryMove,
 		changeMap: changeMap,
@@ -205,9 +205,6 @@ var Mobile = function(map, x, y, name, appearance, maxHp) {
 		distanceTo: distanceTo,
 		damage: damage,
 	};
-	
-	map.getTile(x, y).mobileEnter(rv);
-	map.creatures.push(rv);
 	
 	return rv;
 }

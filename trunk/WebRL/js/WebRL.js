@@ -46,7 +46,9 @@ $(document).ready(function() {
 $(document).keypress(function(e) {
 	var e = window.event || e;
 	
-	switch (e.keyCode) {
+	var code = (e.keyCode == 0) ? e.charCode : e.keyCode ;
+	
+	switch (code) {
 		case 37:
 			player.tryMove(-1, 0);
 			break;
@@ -59,30 +61,26 @@ $(document).keypress(function(e) {
 		case 40:
 			player.tryMove(0, 1);
 			break;
-		default:
 			// Test code, generates a new level after pressing 'r'
-			switch (e.charCode) {
-				case 114: // 'r'
-					var loader = LoadingScreen(function() {
-						maps.mapList.push(Map(40, 20));
-						var mapGen = MapGen(maps.getCurrentMap());
-						
-						mapGen.generateMap(40, 20, 'test');
-						player.changeMap(mapGen.map, 2, 2);
-						
-						msgLog.append("Entered dungeon level: " + maps.mapList.length);
-					},
-					
-					function() {
-						updateDisplay();
-					});
-					
-					loader.load();
-					return false;
-				default:
-					return true;
-			}
-			break;
+		case 114: // 'r'
+			var loader = LoadingScreen(function() {
+				maps.mapList.push(Map(40, 20));
+				var mapGen = MapGen(maps.getCurrentMap());
+				
+				mapGen.generateMap(40, 20, 'test');
+				player.changeMap(mapGen.map, 2, 2);
+				
+				msgLog.append("Entered dungeon level: " + maps.mapList.length);
+			},
+			
+			function() {
+				updateDisplay();
+			});
+			
+			loader.load();
+			return false;
+		default:
+			return true;
 	}
 	
 	for (i = 0; i < maps.getCurrentMap().controllers.length; i++) {

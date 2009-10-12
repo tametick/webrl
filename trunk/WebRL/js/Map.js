@@ -92,8 +92,8 @@ var Maps = function(firstMap) {
 }
 
 var MapGen = function(map, seed) {
-	var map = map || null;
-	var seed = seed || null;
+	var map = map;
+	var seed = seed;
 	
 	// The args could be anything, really.
 	var generateMap = function(w, h, args) {

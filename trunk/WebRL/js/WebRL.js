@@ -26,7 +26,7 @@ $(document).ready(function() {
 	var loader = LoadingScreen(function() {
 		mapGen.generateMap(w, h, 'test');
 	}, function() {
-		player = Mobile("Player", '@', ColoredChar('@', 'blue'), 100, new Faction('player'));
+		player = Mobile("Player", '|', ColoredChar('@', 'blue'), 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);
 	}, function() {
 		mapGen.populateMap('test');
@@ -280,16 +280,19 @@ var Screen = function(width, height) {
 	if (canvas.getContext) {
 		ctx = canvas.getContext('2d');
 		ctx.font = '10px monospace';
-		ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+		ctx.fillStyle = "rgb(0, 0, 0)";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	}
 	
 	var clear = function(x, y) {
-		ctx.clearRect(x * 10, (y + 1) * 10, (x + 1) * 10, (y + 2) * 10);
+		ctx.fillStyle = "rgb(0, 0, 0)";
+		ctx.fillRect(x * 10, (y * 10) + 1, 10, 12);
 	}
 	
 	var putCell = function(x, y, symbol, appearance) {
-		$("#tile" + x + "_" + y).html(appearance.toString());
+		//$("#tile" + x + "_" + y).html(appearance.toString());
 		
+		ctx.fillStyle = "rgb(255, 255, 255)";
 		ctx.fillText(symbol, x * 10, (y + 1) * 10);
 	}
 	

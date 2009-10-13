@@ -13,12 +13,7 @@ MsgLog.prototype.append = function(toAdd) {
 }
 
 MsgLog.prototype.renderToHtml = function() {
-	var log = document.getElementById("msglog");
-	if (log == null) 
-		return;
-	
-	while (log.hasChildNodes()) 
-		log.removeChild(log.childNodes[0]);
+	$("#msglog").html('');
 	
 	var max = this.data.length - 1;
 	var min = max - this.visibleLogBuffer;
@@ -26,9 +21,7 @@ MsgLog.prototype.renderToHtml = function() {
 		min = 0;
 	
 	for (var i = max; i >= min; i--) {
-		var newItem = document.createElement("p");
-		var newText = document.createTextNode(this.data[i]);
-		newItem.appendChild(newText);
-		log.appendChild(newItem);
+		var string = '<p>' + this.data[i] + '</p>';
+		$("#msglog").append(string);
 	}
 }

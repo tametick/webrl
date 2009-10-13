@@ -98,15 +98,16 @@ var MapGen = function(map, seed) {
 	// The args could be anything, really.
 	var generateMap = function(w, h, args) {
 		if (args == "test") {
-			if (!this.map) this.map = Map(w, h);
+			if (!this.map) 
+				this.map = Map(w, h);
 			
 			for (var x = 0; x < w; x++) {
 				for (var y = 0; y < h; y++) {
 					var tile;
 					if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-						tile = Tile(this.map, x, y, false, ColoredChar('#', 'aqua'));
+						tile = Tile(this.map, '#', ColoredChar('#', 'aqua'), x, y, false);
 					} else {
-						tile = Tile(this.map, x, y, true, ColoredChar('.', 'red'));
+						tile = Tile(this.map, '.', ColoredChar('.', 'red'), x, y, true);
 					}
 					this.map.setTile(x, y, tile);
 				}
@@ -118,10 +119,10 @@ var MapGen = function(map, seed) {
 	var populateMap = function(args) {
 		if (args == "test") {
 			var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
-	
+			
 			for (var faction = 0; faction < 4; faction++) {
 				for (var monster = 0; monster < 4; monster++) {
-					var monster1 = Mobile("Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10, new Faction(faction));
+					var monster1 = Mobile("Monster", 'M', ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10, new Faction(faction));
 					this.map.addCreature(monster1, 7 + monster * 8, 2 + faction * 5);
 					
 					var hunter = new KillAllAI(monster1, this.map);

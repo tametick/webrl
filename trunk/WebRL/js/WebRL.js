@@ -25,18 +25,12 @@ $(document).ready(function() {
 	
 	var loader = LoadingScreen(function() {
 		mapGen.generateMap(w, h, 'test');
-	},
-	
-	function() {
-		player = Mobile("Player", ColoredChar('@', 'blue'), 100, new Faction('player'));
+	}, function() {
+		player = Mobile("Player", '@', ColoredChar('@', 'blue'), 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);
-	},
-	
-	function() {
+	}, function() {
 		mapGen.populateMap('test');
-	},
-	
-	function() {
+	}, function() {
 		updateDisplay();
 	});
 	
@@ -46,7 +40,7 @@ $(document).ready(function() {
 $(document).keypress(function(e) {
 	var e = window.event || e;
 	
-	var code = (e.keyCode == 0) ? e.charCode : e.keyCode ;
+	var code = (e.keyCode == 0) ? e.charCode : e.keyCode;
 	
 	switch (code) {
 		case 37:
@@ -61,7 +55,7 @@ $(document).keypress(function(e) {
 		case 40:
 			player.tryMove(0, 1);
 			break;
-			// Test code, generates a new level after pressing 'r'
+		// Test code, generates a new level after pressing 'r'
 		case 114: // 'r'
 			var loader = LoadingScreen(function() {
 				maps.mapList.push(Map(40, 20));
@@ -71,9 +65,7 @@ $(document).keypress(function(e) {
 				player.changeMap(mapGen.map, 2, 2);
 				
 				msgLog.append("Entered dungeon level: " + maps.mapList.length);
-			},
-			
-			function() {
+			}, function() {
 				updateDisplay();
 			});
 			
@@ -104,7 +96,7 @@ var LoadingScreen = function() {
 	var load = function() {
 		var message = "Loading, please wait...<br />";
 		var numSteps = funcs.length;
-	
+		
 		// Hide everything.
 		$("#loading_screen").html(message);
 		$("#screen").hide();
@@ -114,7 +106,7 @@ var LoadingScreen = function() {
 		// For each function except last, put in queue.
 		for (var i = 0; i < funcs.length - 1; ++i) {
 			setTimeout(funcs[i], 1);
-			$("#loading_screen").html(message + ((i+1) / numSteps * 100) + "%");
+			$("#loading_screen").html(message + ((i + 1) / numSteps * 100) + "%");
 		}
 		
 		setTimeout(funcs[funcs.length - 1], 1);
@@ -143,7 +135,7 @@ var ColoredChar = function(ch, charColor) {
 	}
 }
 
-var Mobile = function(name, appearance, maxHp, faction) {
+var Mobile = function(name, symbol, appearance, maxHp, faction) {
 	var tryMove = function(dx, dy) {
 		if (this.dead) {
 			return;
@@ -193,6 +185,7 @@ var Mobile = function(name, appearance, maxHp, faction) {
 		map: null,
 		tile: null,
 		appearance: appearance,
+		symbol: symbol,
 		maxHp: maxHp,
 		hp: maxHp,
 		dead: false,
@@ -209,7 +202,7 @@ var Mobile = function(name, appearance, maxHp, faction) {
 	return rv;
 }
 
-var Tile = function(map, x, y, traversible, appearance) {
+var Tile = function(map, symbol, appearance, x, y, traversible) {
 	var mayEnter = function(mob) {
 		if (!this.traversible) {
 			return false;
@@ -236,9 +229,9 @@ var Tile = function(map, x, y, traversible, appearance) {
 	
 	var paint = function() {
 		if (this.mobile) {
-			scr.putCell(this.x, this.y, this.mobile.appearance);
+			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.appearance);
 		} else {
-			scr.putCell(this.x, this.y, this.appearance);
+			scr.putCell(this.x, this.y, this.symbol, this.appearance);
 		}
 	}
 	
@@ -251,6 +244,7 @@ var Tile = function(map, x, y, traversible, appearance) {
 		x: x,
 		y: y,
 		traversible: traversible,
+		symbol: symbol,
 		appearance: appearance,
 		mobile: null,
 		
@@ -276,9 +270,18 @@ var Screen = function(width, height) {
 	s += '</table>';
 	$("#screen").html(s);
 	
+	var canvas = document.getElementById('canvasScreen');
+	var ctx;
+	if (canvas.getContext) {
+		ctx = canvas.getContext('2d');
+		ctx.font = '10px monospace';
+		ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+	}
 	
-	var putCell = function(x, y, appearance) {
+	var putCell = function(x, y, symbol, appearance) {
 		$("#tile" + x + "_" + y).html(appearance.toString());
+		
+		ctx.fillText(symbol, x * 10, (y + 1) * 10);
 	}
 	
 	return {

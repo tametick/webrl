@@ -227,6 +227,10 @@ var Tile = function(map, symbol, appearance, x, y, traversible) {
 		return this.map.getTile(this.x + dx, this.y + dy);
 	}
 	
+	var clear = function() {
+		scr.clear(this.x, this.y);
+	}
+	
 	var paint = function() {
 		if (this.mobile) {
 			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.appearance);
@@ -251,6 +255,7 @@ var Tile = function(map, symbol, appearance, x, y, traversible) {
 		mayEnter: mayEnter,
 		mobileEnter: mobileEnter,
 		mobileLeave: mobileLeave,
+		clear: clear,
 		paint: paint,
 		toString: toString,
 		getNeighbour: getNeighbour,
@@ -278,6 +283,10 @@ var Screen = function(width, height) {
 		ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
 	}
 	
+	var clear = function(x, y) {
+		ctx.clearRect(x * 10, (y + 1) * 10, (x + 1) * 10, (y + 2) * 10);
+	}
+	
 	var putCell = function(x, y, symbol, appearance) {
 		$("#tile" + x + "_" + y).html(appearance.toString());
 		
@@ -285,6 +294,7 @@ var Screen = function(width, height) {
 	}
 	
 	return {
+		clear: clear,
 		putCell: putCell,
 	};
 }

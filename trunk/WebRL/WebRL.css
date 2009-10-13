@@ -150,6 +150,11 @@ span {
 	font-size: 1em;
 }
 
+font {
+	font-family: monospace;
+	font-size: 1em;
+}
+
 table.display {
 	border-spacing: 0;
 	padding: 0;
@@ -178,3 +183,10 @@ td.display {
 	margin-bottom: 0pt;
 	margin-top: 2pt;
 }
+
+canvas { 
+	border: 1px solid black; 
+	font-family: monospace;
+	font-size: 1em;
+}
+

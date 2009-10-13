@@ -13,6 +13,7 @@ var Map = function(width, height) {
 	var paint = function() {
 		while (this.dirty.length > 0) {
 			var xy = this.dirty.pop();
+			//this.tiles[xy].clear(); <- why is this not working?
 			this.tiles[xy].paint();
 		}
 	}

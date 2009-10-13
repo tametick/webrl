@@ -26,7 +26,7 @@ $(document).ready(function() {
 	var loader = LoadingScreen(function() {
 		mapGen.generateMap(w, h, 'test');
 	}, function() {
-		player = Mobile("Player", '|', ColoredChar('@', 'blue'), 100, new Faction('player'));
+		player = Mobile("Player", '@', [0, 0, 255], 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);
 	}, function() {
 		mapGen.populateMap('test');
@@ -123,19 +123,7 @@ var LoadingScreen = function() {
 	};
 }
 
-var ColoredChar = function(ch, charColor) {
-	var toString = function() {
-		var s = "<span class=\"" + charColor + "\">" + ch + "</span>";
-		return s;
-	};
-	return {
-		ch: ch,
-		charColor: charColor,
-		toString: toString
-	}
-}
-
-var Mobile = function(name, symbol, appearance, maxHp, faction) {
+var Mobile = function(name, symbol, color, maxHp, faction) {
 	var tryMove = function(dx, dy) {
 		if (this.dead) {
 			return;
@@ -184,7 +172,7 @@ var Mobile = function(name, symbol, appearance, maxHp, faction) {
 	var rv = {
 		map: null,
 		tile: null,
-		appearance: appearance,
+		color: color,
 		symbol: symbol,
 		maxHp: maxHp,
 		hp: maxHp,
@@ -202,7 +190,7 @@ var Mobile = function(name, symbol, appearance, maxHp, faction) {
 	return rv;
 }
 
-var Tile = function(map, symbol, appearance, x, y, traversible) {
+var Tile = function(map, symbol, color, x, y, traversible) {
 	var mayEnter = function(mob) {
 		if (!this.traversible) {
 			return false;
@@ -233,14 +221,10 @@ var Tile = function(map, symbol, appearance, x, y, traversible) {
 	
 	var paint = function() {
 		if (this.mobile) {
-			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.appearance);
+			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.color);
 		} else {
-			scr.putCell(this.x, this.y, this.symbol, this.appearance);
+			scr.putCell(this.x, this.y, this.symbol, this.color);
 		}
-	}
-	
-	var toString = function() {
-		return "Tile(" + this.x + "," + this.y + ")";
 	}
 	
 	return {
@@ -249,7 +233,7 @@ var Tile = function(map, symbol, appearance, x, y, traversible) {
 		y: y,
 		traversible: traversible,
 		symbol: symbol,
-		appearance: appearance,
+		color: color,
 		mobile: null,
 		
 		mayEnter: mayEnter,
@@ -257,24 +241,11 @@ var Tile = function(map, symbol, appearance, x, y, traversible) {
 		mobileLeave: mobileLeave,
 		clear: clear,
 		paint: paint,
-		toString: toString,
 		getNeighbour: getNeighbour,
 	}
 }
 
 var Screen = function(width, height) {
-	var s = '<table class="display" >';
-	
-	for (var y = 0; y < height; y++) {
-		s += '<tr class="display">';
-		for (var x = 0; x < width; x++) {
-			s += '<td class="display" id="tile' + x + "_" + y + '"></td>';
-		}
-		s += '</tr>';
-	}
-	s += '</table>';
-	$("#screen").html(s);
-	
 	var canvas = document.getElementById('canvasScreen');
 	var ctx;
 	if (canvas.getContext) {
@@ -289,10 +260,8 @@ var Screen = function(width, height) {
 		ctx.fillRect(x * 10, (y * 10) + 1, 10, 12);
 	}
 	
-	var putCell = function(x, y, symbol, appearance) {
-		//$("#tile" + x + "_" + y).html(appearance.toString());
-		
-		ctx.fillStyle = "rgb(255, 255, 255)";
+	var putCell = function(x, y, symbol, color) {
+		ctx.fillStyle = "rgb(+" + color[0] + "," + color[1] + "," + color[2] + ")";
 		ctx.fillText(symbol, x * 10, (y + 1) * 10);
 	}
 	

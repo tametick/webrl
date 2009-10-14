@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" type="text/css" href="WebRL.css">
+		<title>WebRL</title>
+
+		<script type="application/javascript" src="http://www.google.com/jsapi"></script>
+	</head>
+	<body>
+		<h1>WebRL</h1>
+		<div id="screen">
+		</div>
+
+		<script type="application/javascript">
+			google.load("jquery", "1.3.2");
+		</script>
+		<script type="application/javascript" src="./js/SpartanDisplay.js"></script>
+		<script type="application/javascript">
+			var scr = SpartanImageScreen( 80, 25, "screen" );
+
+			scr.setObjectAt( 40, 10, "images/red-dot.png" );
+			// Will disappear when you walk over it (not intentional). But
+			// note how it disappears when it's out of active view and
+			// reappears when back inside it.
+
+			var px = 10, py = 10;
+			$(document).keypress(function(e) {
+				var e = window.event || e;
+				var code = (e.keyCode == 0) ? e.charCode : e.keyCode ;
+				switch( code ) {
+					case 37:
+						scr.setObjectAt( px, py, null );
+						px--;
+						scr.setObjectAt( px, py, "images/red-dot.png" );
+						break;
+					case 38:
+						scr.setObjectAt( px, py, null );
+						py--;
+						scr.setObjectAt( px, py, "images/red-dot.png" );
+						break;
+					case 39:
+						scr.setObjectAt( px, py, null );
+						px++;
+						scr.setObjectAt( px, py, "images/red-dot.png" );
+						break;
+					case 40:
+						scr.setObjectAt( px, py, null );
+						py++;
+						scr.setObjectAt( px, py, "images/red-dot.png" );
+						break;
+					default:
+						return true;
+				}
+				scr.hackupdate( px, py );
+				return false;
+			});
+		</script>
+	</body>
+</html>

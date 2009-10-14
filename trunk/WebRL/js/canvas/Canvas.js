@@ -13,19 +13,20 @@ var Canvas = function(id, width, height) {
 	var changeFont = function(to) {
 		size = getFontSize(to);
 		if (supports_text) {
-			ctx.font = to;
 			fascent = size * 0.1;
 			fdescent = size;
 			fwidth = size;
+			canv.width = (fwidth*width);
+			canv.height = (fascent+fdescent)*height;
+			ctx.font = to;
 		}
 		else {
 			fascent = ctx.fontDescent('sans', size);
 			fdescent = ctx.fontAscent('sans', size);
 			fwidth = ctx.measureText('sans', size, '@');
+			canv.width = (fwidth*width);
+			canv.height = (fascent+fdescent)*height;
 		}
-		
-		canv.width = (fwidth*width);
-		canv.height = (fascent+fdescent)*height;
 	}
 	
 	var fontAscent = function() {
@@ -64,7 +65,7 @@ var Canvas = function(id, width, height) {
 	var showText = function(str, x, y) {
 		var temp = ctx.strokeStyle;
 		ctx.strokeStyle = ctx.fillStyle;
-		ctx.drawText('sans', 10, x, y, str);
+		ctx.drawText('sans', size, x, y, str);
 		ctx.strokeStype = temp;
 	}
 	
@@ -84,11 +85,11 @@ var Canvas = function(id, width, height) {
 		ctx.fillText = showText;
 		ctx.strokeText = showText;
 		
-		changeFont('10px monospace');
+		changeFont('14px monospace');
 	}
 	else {
 		supports_text = true;
-		changeFont('10px monospace');
+		changeFont('14px monospace');
 	}
 	
 	return {

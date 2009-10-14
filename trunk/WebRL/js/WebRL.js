@@ -249,7 +249,7 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 
 var GameScreen = function(width, height) {
 	var cnvs = Canvas('canvasScreen', width, height);
-
+	
 	cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
 	cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);
 	

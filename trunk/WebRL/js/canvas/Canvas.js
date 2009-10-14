@@ -1,4 +1,3 @@
-
 // Width/Height are in characters
 var Canvas = function(id, width, height) {
 	var ctx;
@@ -8,7 +7,7 @@ var Canvas = function(id, width, height) {
 	var supports_text;
 	
 	var canv;
-
+	
 	// Public functions.
 	var changeFont = function(to) {
 		size = getFontSize(to);
@@ -16,16 +15,15 @@ var Canvas = function(id, width, height) {
 			fascent = size * 0.1;
 			fdescent = size;
 			fwidth = size;
-			canv.width = (fwidth*width);
-			canv.height = (fascent+fdescent)*height;
+			canv.width = (fwidth * width);
+			canv.height = (fascent + fdescent) * height;
 			ctx.font = to;
-		}
-		else {
+		} else {
 			fascent = ctx.fontDescent('sans', size);
 			fdescent = ctx.fontAscent('sans', size);
 			fwidth = ctx.measureText('sans', size, '@');
-			canv.width = (fwidth*width);
-			canv.height = (fascent+fdescent)*height;
+			canv.width = (fwidth * width);
+			canv.height = (fascent + fdescent) * height;
 		}
 	}
 	
@@ -47,15 +45,13 @@ var Canvas = function(id, width, height) {
 	
 	// Gets the font size from a string like, "10px monospace"
 	var getFontSize = function(str) {
-		if (!str)
+		if (!str) 
 			return 10;
 		if (str.indexOf('px') != -1) {
 			return 1 * str.substring(0, str.indexOf('px'));
-		}
-		else if (str.indexOf('pt') != -1) {
+		} else if (str.indexOf('pt') != -1) {
 			return 1 * str.substring(0, str.indexOf('px'));
-		}
-		else {
+		} else {
 			// default to 10
 			return 10;
 		}
@@ -79,7 +75,7 @@ var Canvas = function(id, width, height) {
 	// Initialize
 	canv = document.getElementById(id);
 	
-	if (!canv || !canv.getContext)
+	if (!canv || !canv.getContext) 
 		return null;
 	
 	ctx = canv.getContext('2d');
@@ -93,8 +89,7 @@ var Canvas = function(id, width, height) {
 		ctx.strokeText = showText;
 		
 		changeFont('14px monospace');
-	}
-	else {
+	} else {
 		supports_text = true;
 		changeFont('14px monospace');
 	}

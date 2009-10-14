@@ -12,7 +12,7 @@ function updateDisplay() {
 $(document).ready(function() {
 	var w = 40, h = 20;
 	maps = Maps(Map(w, h));
-	scr = Screen(w, h);
+	scr = GameScreen(w, h);
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
@@ -37,7 +37,7 @@ $(document).ready(function() {
 	loader.load();
 });
 
-$(document).keypress(function(e) {
+$(document).keydown(function(e) {
 	var e = window.event || e;
 	
 	var code = (e.keyCode == 0) ? e.charCode : e.keyCode;
@@ -100,6 +100,7 @@ var LoadingScreen = function() {
 		// Hide everything.
 		$("#loading_screen").html(message);
 		$("#screen").hide();
+		$("#canvasScreen").hide();
 		$("#hp-display").hide();
 		$("#msglog").hide();
 		
@@ -112,6 +113,7 @@ var LoadingScreen = function() {
 		setTimeout(funcs[funcs.length - 1], 1);
 		setTimeout(function() {
 			$("#screen").show();
+			$("#canvasScreen").show();
 			$("#hp-display").show();
 			$("#msglog").show();
 			$("#loading_screen").html("");
@@ -245,24 +247,20 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 	}
 }
 
-var Screen = function(width, height) {
-	var canvas = document.getElementById('canvasScreen');
-	var ctx;
-	if (canvas.getContext) {
-		ctx = canvas.getContext('2d');
-		ctx.font = '10px monospace';
-		ctx.fillStyle = "rgb(0, 0, 0)";
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-	}
+var GameScreen = function(width, height) {
+	var cnvs = Canvas('canvasScreen', width, height);
+
+	cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
+	cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);
 	
 	var clear = function(x, y) {
-		ctx.fillStyle = "rgb(0, 0, 0)";
-		ctx.fillRect(x * 10, (y * 10) + 1, 10, 12);
+		cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
+		cnvs.ctx.fillRect(x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + 1, cnvs.fontWidth(), cnvs.fontHeight());
 	}
 	
 	var putCell = function(x, y, symbol, color) {
-		ctx.fillStyle = "rgb(+" + color[0] + "," + color[1] + "," + color[2] + ")";
-		ctx.fillText(symbol, x * 10, (y + 1) * 10);
+		cnvs.ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+		cnvs.ctx.fillText(symbol, x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + cnvs.fontDescent());
 	}
 	
 	return {

@@ -40,7 +40,7 @@ $(document).ready(function() {
 $(document).keydown(function(e) {
 	var e = window.event || e;
 	
-	var code = (e.keyCode == 0) ? e.charCode : e.keyCode;
+	var code = e.keyCode;
 	
 	switch (code) {
 		case 37:
@@ -56,7 +56,7 @@ $(document).keydown(function(e) {
 			player.tryMove(0, 1);
 			break;
 		// Test code, generates a new level after pressing 'r'
-		case 114: // 'r'
+		case 82: // 'r'
 			var loader = LoadingScreen(function() {
 				maps.mapList.push(Map(40, 20));
 				var mapGen = MapGen(maps.getCurrentMap());
@@ -190,81 +190,4 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 	};
 	
 	return rv;
-}
-
-var Tile = function(map, symbol, color, x, y, traversible) {
-	var mayEnter = function(mob) {
-		if (!this.traversible) {
-			return false;
-		}
-		if (this.mobile) {
-			return false;
-		}
-		return true;
-	}
-	
-	var mobileEnter = function(mob) {
-		this.mobile = mob;
-		this.map.addDirty(this);
-	}
-	
-	var mobileLeave = function() {
-		this.mobile = null;
-		this.map.addDirty(this);
-	}
-	
-	var getNeighbour = function(dx, dy) {
-		return this.map.getTile(this.x + dx, this.y + dy);
-	}
-	
-	var clear = function() {
-		scr.clear(this.x, this.y);
-	}
-	
-	var paint = function() {
-		if (this.mobile) {
-			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.color);
-		} else {
-			scr.putCell(this.x, this.y, this.symbol, this.color);
-		}
-	}
-	
-	return {
-		map: map,
-		x: x,
-		y: y,
-		traversible: traversible,
-		symbol: symbol,
-		color: color,
-		mobile: null,
-		
-		mayEnter: mayEnter,
-		mobileEnter: mobileEnter,
-		mobileLeave: mobileLeave,
-		clear: clear,
-		paint: paint,
-		getNeighbour: getNeighbour,
-	}
-}
-
-var GameScreen = function(width, height) {
-	var cnvs = Canvas('canvasScreen', width, height);
-	
-	cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
-	cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);
-	
-	var clear = function(x, y) {
-		cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
-		cnvs.ctx.fillRect(x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + 1, cnvs.fontWidth(), cnvs.fontHeight());
-	}
-	
-	var putCell = function(x, y, symbol, color) {
-		cnvs.ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
-		cnvs.ctx.fillText(symbol, x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + cnvs.fontDescent());
-	}
-	
-	return {
-		clear: clear,
-		putCell: putCell,
-	};
 }

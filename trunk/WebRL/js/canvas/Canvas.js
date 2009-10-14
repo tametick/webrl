@@ -1,4 +1,27 @@
-// Width/Height are in characters
+var GameScreen = function(width, height) {
+	var cnvs = Canvas('canvasScreen', width, height);
+	
+	cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
+	cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);
+	
+	var clear = function(x, y) {
+		cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
+		cnvs.ctx.fillRect(x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + 1, cnvs.fontWidth(), cnvs.fontHeight());
+	}
+	
+	var putCell = function(x, y, symbol, color) {
+		cnvs.ctx.fillStyle = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+		cnvs.ctx.fillText(symbol, x * cnvs.fontWidth(), (y * cnvs.fontHeight()) + cnvs.fontDescent());
+	}
+	
+	return {
+		clear: clear,
+		putCell: putCell,
+	};
+}
+
+// Width/Height are in characters, this class should only be used
+// within GameScreen.
 var Canvas = function(id, width, height) {
 	var ctx;
 	var fascent;

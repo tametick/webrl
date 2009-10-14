@@ -65,7 +65,14 @@ var Canvas = function(id, width, height) {
 	var showText = function(str, x, y) {
 		var temp = ctx.strokeStyle;
 		ctx.strokeStyle = ctx.fillStyle;
-		ctx.drawText('sans', size, x, y, str);
+		
+		for (var i = 0; i < str.length; ++i) {
+			var offset = (fwidth - ctx.measureText('sans', size, str[i])) / 2;
+			ctx.drawText('sans', size, x + offset, y, str);
+			x += x;
+		}
+		
+		
 		ctx.strokeStype = temp;
 	}
 	

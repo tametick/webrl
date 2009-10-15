@@ -10,9 +10,10 @@ function updateDisplay() {
 }
 
 $(document).ready(function() {
-	var w = 40, h = 20;
-	maps = Maps(Map(w, h));
-	scr = GameScreen(w, h);
+	var scrWidth = 40, scrHeight = 20;
+	var mapWidth = scrWidth, mapHeight = scrHeight;
+	maps = Maps(Map(scrWidth, scrHeight));
+	scr = GameScreen(scrWidth, scrHeight);
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
@@ -24,7 +25,7 @@ $(document).ready(function() {
 	// sequence.
 	
 	var loader = LoadingScreen(function() {
-		mapGen.generateMap(w, h, 'test');
+		mapGen.generateMap(mapWidth, mapHeight, 'test');
 	}, function() {
 		player = Mobile("Player", '@', [0, 0, 255], 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);

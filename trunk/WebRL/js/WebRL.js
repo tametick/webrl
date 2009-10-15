@@ -61,7 +61,7 @@ $(document).keydown(function(e) {
 				maps.mapList.push(Map(40, 20));
 				var mapGen = MapGen(maps.getCurrentMap());
 				
-				mapGen.generateMap(40, 20, 'test');
+				mapGen.generateMap(40, 20, 'digDug');
 				player.changeMap(mapGen.map, 2, 2);
 				
 				msgLog.append("Entered dungeon level: " + maps.mapList.length);

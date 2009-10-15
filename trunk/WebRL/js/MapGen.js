@@ -1,6 +1,6 @@
 var MapGen = function(map, seed) {
 	var map = map;
-	var spawnX = null;
+	var spawnX = null; // possible hacks, should be in map me thinks (stairs)
 	var spawnY = null;
 	var seed = seed;
 	
@@ -37,6 +37,8 @@ var MapGen = function(map, seed) {
 					// TODO: Add doors.
 					else if (f.map[x][y] == '.' || f.map[x][y] == '+') {
 						tile = Tile(this.map, '.', [255, 0, 0], x, y, true);
+						this.spawnX = x;
+						this.spawnY = y;
 					}
 					this.map.setTile(x, y, tile);
 				}

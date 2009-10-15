@@ -64,7 +64,7 @@ $(document).keydown(function(e) {
 				mapGen.generateMap(40, 20, 'digDug');
 				player.changeMap(mapGen.map, mapGen.spawnX, mapGen.spawnY);
 				
-				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + map.spawnX + ", " + map.spawnY);
+				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + mapGen.spawnX + ", " + mapGen.spawnY);
 			}, function() {
 				updateDisplay();
 			});

@@ -21,11 +21,13 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		return this.map.getTile(this.x + dx, this.y + dy);
 	}
 	
-	var paint = function() {
-		if (this.mobile) {
-			scr.putCell(this.x, this.y, this.mobile.symbol, this.mobile.color);
-		} else {
-			scr.putCell(this.x, this.y, this.symbol, this.color);
+	var paint = function(dx, dy, scrWidth, scrHeight) {
+		if (x + dx >= 0 && y + dy >= 0 && x + dx < scrWidth && y + dy < scrHeight) {
+			if (this.mobile) {
+				scr.putCell(x + dx, y + dy, this.mobile.symbol, this.mobile.color);
+			} else {
+				scr.putCell(x + dx, y + dy, this.symbol, this.color);
+			}
 		}
 	}
 	
@@ -58,11 +60,11 @@ var Map = function(width, height) {
 		scr.clearAll();
 	}
 	
-	var paint = function() {
+	var paint = function(dx, dy, scrWidth, scrHeight) {
 		clear();
 		for (var yi = 0; yi < height; yi++) 
 			for (var xi = 0; xi < width; xi++) 
-				this.tiles[[xi, yi]].paint();
+				this.tiles[[xi, yi]].paint(dx, dy, scrWidth, scrHeight);
 	}
 	
 	var setTile = function(x, y, tile) {

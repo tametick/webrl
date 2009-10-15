@@ -13,6 +13,8 @@ var GameScreen = function(width, height) {
 	clearAll();
 	
 	return {
+		width:width, 
+		height:height,
 		clearAll : clearAll,
 		putCell: putCell,
 	};
@@ -101,7 +103,7 @@ var Canvas = function(id, width, height) {
 	
 	ctx = canv.getContext('2d');
 	
-	// Doesn't support text functions.
+	// In case the browser doesn't support text functions
 	if (!ctx.fillText) {
 		supports_text = false;
 		CanvasTextFunctions.enable(ctx);

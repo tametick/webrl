@@ -6,7 +6,7 @@ var msgLog;
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
-	maps.getCurrentMap().paint();
+	maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
 }
 
 $(document).ready(function() {

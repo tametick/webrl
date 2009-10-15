@@ -3,15 +3,20 @@ var maps;
 var player;
 var msgLog;
 
+var scrWidth = 40, scrHeight = 20;
+var mapWidth = 100, mapHeight = 50;
+
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
-	maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
+	if (player.tile)
+		maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
+	else
+		// This is if the player is dead
+		maps.getCurrentMap().paint(0, 0, this.scr.width, this.scr.height);
 }
 
 $(document).ready(function() {
-	var scrWidth = 40, scrHeight = 20;
-	var mapWidth = scrWidth, mapHeight = scrHeight;
 	maps = Maps(Map(scrWidth, scrHeight));
 	scr = GameScreen(scrWidth, scrHeight);
 	msgLog = new MsgLog;
@@ -25,7 +30,7 @@ $(document).ready(function() {
 	// sequence.
 	
 	var loader = LoadingScreen(function() {
-		mapGen.generateMap(mapWidth, mapHeight, 'test');
+		mapGen.generateMap(scrWidth, scrHeight, 'test');
 	}, function() {
 		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);
@@ -59,10 +64,12 @@ $(document).keydown(function(e) {
 		// Test code, generates a new level after pressing 'r'
 		case 82: // 'r'
 			var loader = LoadingScreen(function() {
-				maps.mapList.push(Map(40, 20));
+				player.hp = player.maxHp;
+				player.dead = false;
+				maps.mapList.push(Map(mapWidth, mapHeight));
 				var mapGen = MapGen(maps.getCurrentMap());
 				
-				mapGen.generateMap(40, 20, 'digDug');
+				mapGen.generateMap(mapWidth, mapHeight, 'digDug');
 				player.changeMap(mapGen.map, mapGen.spawnX, mapGen.spawnY);
 				
 				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + mapGen.spawnX + ", " + mapGen.spawnY);
@@ -144,7 +151,8 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 	}
 	
 	var changeMap = function(map, x, y) {
-		this.map.removeCreature(this);
+		if (this.map)
+			this.map.removeCreature(this);
 		this.map = map;
 		this.tile = this.map.getTile(x, y);
 		this.tile.mobileEnter(this);

@@ -11,20 +11,14 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 	
 	var mobileEnter = function(mob) {
 		this.mobile = mob;
-		this.map.addDirty(this);
 	}
 	
 	var mobileLeave = function() {
 		this.mobile = null;
-		this.map.addDirty(this);
 	}
 	
 	var getNeighbour = function(dx, dy) {
 		return this.map.getTile(this.x + dx, this.y + dy);
-	}
-	
-	var clear = function() {
-		scr.clear(this.x, this.y);
 	}
 	
 	var paint = function() {
@@ -48,7 +42,6 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		mayEnter: mayEnter,
 		mobileEnter: mobileEnter,
 		mobileLeave: mobileLeave,
-		clear: clear,
 		paint: paint,
 		getNeighbour: getNeighbour,
 	}
@@ -56,27 +49,24 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 
 var Map = function(width, height) {
 	var tiles = [];
-	var dirty = [];
 	var tickCounter = 0;
 	
 	var creatures = [];
 	var controllers = [];
 	
-	var addDirty = function(tile) {
-		this.dirty.push([tile.x, tile.y]);
+	var clear = function() {
+		scr.clearAll();
 	}
 	
 	var paint = function() {
-		while (this.dirty.length > 0) {
-			var xy = this.dirty.pop();
-			this.tiles[xy].clear();
-			this.tiles[xy].paint();
-		}
+		clear();
+		for (var yi = 0; yi < height; yi++) 
+			for (var xi = 0; xi < width; xi++) 
+				this.tiles[[xi, yi]].paint();
 	}
 	
 	var setTile = function(x, y, tile) {
 		this.tiles[[x, y]] = tile;
-		this.dirty.push([x, y]);
 	}
 	
 	var getTile = function(x, y) {
@@ -117,14 +107,12 @@ var Map = function(width, height) {
 	
 	return {
 		tiles: tiles,
-		dirty: dirty,
 		creatures: creatures,
 		controllers: controllers,
 		
 		paint: paint,
 		getTile: getTile,
 		setTile: setTile,
-		addDirty: addDirty,
 		removeCreature: removeCreature,
 		addCreature: addCreature,
 	};

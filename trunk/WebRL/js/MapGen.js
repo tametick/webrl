@@ -31,11 +31,11 @@ var MapGen = function(map, seed) {
 			for (var x = 0; x < w; x++) {
 				for (var y = 0; y < h; y++) {
 					var tile;
-					if (f.map[x][y] == '#') tile = Tile(this.map, '#', [0, 0, 255], x, y, false);
-					if (f.map[x][y] == '_') tile = Tile(this.map, '#', [0, 0, 80], x, y, false);
+					if (f.map[x][y] == '#') tile = Tile(this.map, '#', [200, 150, 100], x, y, false);
+					if (f.map[x][y] == '_') tile = Tile(this.map, '#', [75, 50, 25], x, y, false);
 					// TODO: Add doors.
 					else if (f.map[x][y] == '.' || f.map[x][y] == '+') {
-						tile = Tile(this.map, '.', [255, 0, 0], x, y, true);
+						tile = Tile(this.map, '.', [150, 100, 50], x, y, true);
 						this.spawnX = x;
 						this.spawnY = y;
 					}

@@ -27,7 +27,7 @@ $(document).ready(function() {
 	var loader = LoadingScreen(function() {
 		mapGen.generateMap(mapWidth, mapHeight, 'test');
 	}, function() {
-		player = Mobile("Player", '@', [0, 0, 255], 100, new Faction('player'));
+		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
 		mapGen.map.addCreature(player, 2, 2);
 	}, function() {
 		mapGen.populateMap('test');

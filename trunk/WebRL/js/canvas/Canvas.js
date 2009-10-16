@@ -1,7 +1,7 @@
 var GameScreen = function(width, height) {
 	var clearAll = function() {
 		cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
-		cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);		
+		cnvs.ctx.fillRect(0, 0, cnvs.canvas.width, cnvs.canvas.height);
 	}
 	
 	var putCell = function(x, y, symbol, color) {
@@ -13,9 +13,9 @@ var GameScreen = function(width, height) {
 	clearAll();
 	
 	return {
-		width:width, 
-		height:height,
-		clearAll : clearAll,
+		width: width,
+		height: height,
+		clearAll: clearAll,
 		putCell: putCell,
 	};
 }

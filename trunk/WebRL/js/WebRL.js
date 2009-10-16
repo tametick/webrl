@@ -9,10 +9,10 @@ var mapWidth = 100, mapHeight = 50;
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
-	if (player.tile)
+	if (player.tile) 
 		maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
-	else
-		// This is if the player is dead
+	else 
+		// If the player is dead
 		maps.getCurrentMap().paint(0, 0, this.scr.width, this.scr.height);
 }
 
@@ -151,7 +151,7 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 	}
 	
 	var changeMap = function(map, x, y) {
-		if (this.map)
+		if (this.map) 
 			this.map.removeCreature(this);
 		this.map = map;
 		this.tile = this.map.getTile(x, y);

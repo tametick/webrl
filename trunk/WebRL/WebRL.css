@@ -1,17 +1,18 @@
 body {
 	text-align: center;
+	font-family: Monospace;
 	background-color: #000000;
 	color: #FFFFFF;
 	font-size: 100%;
 }
 
 span {
-	font-family: monospace;
+	font-family: Monospace;
 	font-size: 1em;
 }
 
 font {
-	font-family: monospace;
+	font-family: Monospace;
 	font-size: 1em;
 }
 
@@ -42,6 +43,11 @@ td.display {
 	font-size: small;
 	margin-bottom: 0pt;
 	margin-top: 2pt;
+}
+
+#canvasScreen {
+	padding: 10px;
+	border:2px solid #888888;
 }
 
 canvas {

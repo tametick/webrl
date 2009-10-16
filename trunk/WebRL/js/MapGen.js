@@ -1,19 +1,23 @@
-var MapGen = function(map, seed) {
+var MapGen = function(map, width, height, seed) {
 	var map = map;
 	var spawnX = null; // possible hacks, should be in map me thinks (stairs)
 	var spawnY = null;
 	var seed = seed;
+	var width = width;
+	var height = height;
+	var mt = new MersenneTwister19937();
+	mt.init_genrand(seed);
 	
 	// The args could be anything, really.
-	var generateMap = function(w, h, args) {
+	var generateMap = function(args) {
 		if (args == "test") {
 			if (!this.map) 
-				this.map = Map(w, h);
+				this.map = Map(width, height);
 			
-			for (var x = 0; x < w; x++) {
-				for (var y = 0; y < h; y++) {
+			for (var x = 0; x < width; x++) {
+				for (var y = 0; y < height; y++) {
 					var tile;
-					if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
+					if (x == 0 || y == 0 || x == (width - 1) || y == (height - 1)) {
 						tile = Tile(this.map, '#', [0, 0, 255], x, y, false);
 					} else {
 						tile = Tile(this.map, '.', [255, 0, 0], x, y, true);
@@ -23,12 +27,12 @@ var MapGen = function(map, seed) {
 			}
 		} else if (args == "digDug") {
 			if (!this.map) 
-				this.map = Map(w, h);
-			var f = DigDug(w, h);
+				this.map = Map(width, height);
+			var f = DigDug(width, height);
 			
 			// Copy into map.
-			for (var x = 0; x < w; x++) {
-				for (var y = 0; y < h; y++) {
+			for (var x = 0; x < width; x++) {
+				for (var y = 0; y < height; y++) {
 					var tile;
 					if (f.map[x][y] == '#') 
 						tile = Tile(this.map, '#', [200, 150, 100], x, y, false);
@@ -48,18 +52,26 @@ var MapGen = function(map, seed) {
 	
 	// Could be anything for the args as well.
 	var populateMap = function(args) {
-		if (args == "test") {
-			var colorfactions = [[128, 0, 0], [64, 0, 0], [0, 128, 0], [0, 64, 0]];
-			
-			for (var faction = 0; faction < 4; faction++) {
-				for (var monster = 0; monster < 4; monster++) {
-					var monster1 = Mobile("Monster", 'M', colorfactions[faction], Math.random() * 10 + 10, new Faction(faction));
-					this.map.addCreature(monster1, 7 + monster * 8, 2 + faction * 5);
-					
-					var hunter = new KillAllAI(monster1, this.map);
-					this.map.controllers.push(hunter);
-				}
+		// Just an example of populating a map, eventually the level of the dungeon and
+		// and stuff can take a role. Possibly putting this into a class.
+		var openTiles = [];
+		
+		for (var x = 0; x < width; x++) {
+			for (var y = 0; y < height; y++) {
+				if (map.getTile(x, y).traversible)
+					openTiles.push([x, y]);
 			}
+		}
+		
+		for (var m = 0; m < args; ++m) {
+			var i = Math.floor(mt.genrand_real2() * openTiles.length);
+			var monster = Mobile("Monster", 'M', [100, 160, 120], Math.random() * 10 + 10, new Faction(1));
+			this.map.addCreature(monster, openTiles[i][0], openTiles[i][1]);
+
+			var hunter = new KillAllAI(monster, this.map);
+			this.map.controllers.push(hunter);
+			
+			openTiles.slice(i, i);
 		}
 	}
 	

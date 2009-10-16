@@ -17,25 +17,25 @@ function updateDisplay() {
 }
 
 $(document).ready(function() {
-	maps = Maps(Map(scrWidth, scrHeight));
+	maps = Maps(Map(mapWidth, mapHeight));
 	scr = GameScreen(scrWidth, scrHeight);
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
 	
-	var mapGen = MapGen(currentMap);
+	var mapGen = MapGen(currentMap, mapWidth, mapHeight);
 	
 	// If one portion of map generation is used in a load sequence,
 	// all steps of the map generation must also be part of the load
 	// sequence.
 	
 	var loader = LoadingScreen(function() {
-		mapGen.generateMap(scrWidth, scrHeight, 'test');
+		mapGen.generateMap("digDug");
 	}, function() {
 		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
-		mapGen.map.addCreature(player, 2, 2);
+		mapGen.map.addCreature(player, mapGen.spawnX, mapGen.spawnY);
 	}, function() {
-		mapGen.populateMap('test');
+		mapGen.populateMap(5);
 	}, function() {
 		updateDisplay();
 	});
@@ -67,10 +67,11 @@ $(document).keydown(function(e) {
 				player.hp = player.maxHp;
 				player.dead = false;
 				maps.mapList.push(Map(mapWidth, mapHeight));
-				var mapGen = MapGen(maps.getCurrentMap());
+				var mapGen = MapGen(maps.getCurrentMap(), mapWidth, mapHeight);
 				
-				mapGen.generateMap(mapWidth, mapHeight, 'digDug');
+				mapGen.generateMap('digDug');
 				player.changeMap(mapGen.map, mapGen.spawnX, mapGen.spawnY);
+				mapGen.populateMap(5);
 				
 				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + mapGen.spawnX + ", " + mapGen.spawnY);
 			}, function() {

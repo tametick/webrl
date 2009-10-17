@@ -60,8 +60,8 @@ var Map = function(width, height) {
 	}
 
 	var center = function(x, y) {
-		this.dx = scr.width / 2 - x;
-		this.dy = scr.height / 2 - y;
+		this.dx = Math.floor( scr.width / 2 ) - x;
+		this.dy = Math.floor( scr.height / 2 ) - y;
 	}
 
 	var maybeRecenter = function(x,y, mzl) {

@@ -21,15 +21,14 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		return this.map.getTile(this.x + dx, this.y + dy);
 	}
 	
-	var paint = function(dx, dy, scrWidth, scrHeight) {
-		if (x + dx >= 0 && y + dy >= 0 && x + dx < scrWidth && y + dy < scrHeight) {
-			if (this.mobile) {
-				scr.putCell(x + dx, y + dy, this.mobile.symbol, this.mobile.color);
-			} else {
-				scr.putCell(x + dx, y + dy, this.symbol, this.color);
-			}
+	var paint = function(sx, sy) {
+		if (this.mobile) {
+			scr.putCell(sx, sy, this.mobile.symbol, this.mobile.color);
+		} else {
+			scr.putCell(sx, sy, this.symbol, this.color);
 		}
 	}
+
 	
 	return {
 		map: map,
@@ -61,11 +60,16 @@ var Map = function(width, height) {
 	}
 	
 	var paint = function(dx, dy, scrWidth, scrHeight) {
+		/* physical + delta = screen */
 		clear();
-		for (var yi = 0; yi < height; yi++) 
-			for (var xi = 0; xi < width; xi++) 
-				this.tiles[[xi, yi]].paint(dx, dy, scrWidth, scrHeight);
-
+		for(var sx=0;sx<scrWidth;sx++) {
+			for(var sy=0;sy<scrHeight;sy++) {
+				var tile = this.tiles[[sx-dx,sy-dy]];
+				if( tile != null ) {
+					tile.paint( sx, sy );
+				}
+			}
+		}
 		scr.update();
 	}
 	
@@ -108,9 +112,18 @@ var Map = function(width, height) {
 		creature.tile = this.getTile(x, y);
 		creature.map = this;
 	}
-	
+
+	var tilesMD = [];
+	for(var x=0;x<width;x++) {
+		tilesMD[x] = [];
+		for(var y=0;y<height;y++) {
+			tilesMD[x].push( tiles[[x,y]] );
+		}
+	}
+
 	return {
 		tiles: tiles,
+		tilesMD: tilesMD,
 		creatures: creatures,
 		controllers: controllers,
 		

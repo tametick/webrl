@@ -1,0 +1,52 @@
+.spartan-cell {
+	position: absolute;
+	width: 13px;
+	height: 23px;
+}
+
+.spartan-colour-layer {
+	position: absolute;
+	width: 13px;
+	height: 23px;
+	left: 0;
+	right: 0;
+	z-index: 0;
+}
+
+.spartan-image-layer {
+	position: absolute;
+	width: 13px;
+	height: 23px;
+	left: 0;
+	right: 0;
+	z-index: 1;
+}
+
+.spartan-overlay-layer {
+	position: absolute;
+	width: 13px;
+	height: 23px;
+	left: 0;
+	right: 0;
+	z-index: 2;
+}
+
+.spartan-overlay-fog {
+	background-color: black;
+	
+	filter:alpha(opacity=50);
+	-moz-opacity:0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+
+	visibility: visible;
+}
+
+.spartan-overlay-none {
+	visibility: hidden;
+}
+
+.spartan-overlay-darkness {
+	background-color: black;
+	visibility: visible;
+}

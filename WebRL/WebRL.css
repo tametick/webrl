@@ -1,0 +1,58 @@
+body {
+	text-align: center;
+	font-family: Monospace;
+	background-color: #000000;
+	color: #FFFFFF;
+	font-size: 100%;
+}
+
+span {
+	font-family: Monospace;
+	font-size: 1em;
+}
+
+font {
+	font-family: Monospace;
+	font-size: 1em;
+}
+
+table.display {
+	border-spacing: 0;
+	padding: 0;
+	margin: 0;
+	background-color: black;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+tr.display {
+	border-spacing: 0;
+	padding: 0;
+	margin: 0;
+}
+
+td.display {
+	border-spacing: 0;
+	padding: 0;
+	margin: 0;
+	width: 0.5em;
+	text-align: center;
+}
+
+#msglog p {
+	font-size: small;
+	margin-bottom: 0pt;
+	margin-top: 2pt;
+}
+
+#canvasScreen {
+	padding: 10px;
+	border:2px solid #888888;
+}
+
+canvas {
+	border: 1px solid black;
+	font-family: monospace;
+	font-size: 1em;
+}
+

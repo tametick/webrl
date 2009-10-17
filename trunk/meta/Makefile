@@ -25,3 +25,7 @@ crush:
 install:
 	mkdir -p ../WebRL/symbols
 	cp -r ./output-images/* ../WebRL/symbols 
+
+install-current-fit: ttf-bitstream-vera-1.10
+	./ttf2png.py ttf-bitstream-vera-1.10/VeraMoBd.ttf 20 invert
+	make install

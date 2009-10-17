@@ -27,7 +27,6 @@ var SpartanImageScreen = function( width, height, target ) {
 				}
 			}
 		}
-		this.showFov();
 	}
 
 	for(var x = 0; x < width; x++) {
@@ -36,7 +35,7 @@ var SpartanImageScreen = function( width, height, target ) {
 	var tileWidth = 13;
 	var tileHeight = 23;
 
-	var showFov = function() {
+	var updateInverse = function() {
 		var classesVisible = "spartan-overlay-layer spartan-overlay-none";
 		var classesFoggy = "spartan-overlay-layer spartan-overlay-fog";
 		var classesDarkness = "spartan-overlay-layer spartan-overlay-darkness";
@@ -53,6 +52,16 @@ var SpartanImageScreen = function( width, height, target ) {
 						cell.layerOverlay.className = classesVisible;
 					}
 				}
+				if( cell.fgColourCache != cell.fgColour ) {
+					cell.fgColourCache = cell.fgColour;
+					cell.layerColour.setAttribute( "STYLE", "background-color: #" + cell.fgColour );
+				}
+				if( cell.shapeCache != cell.shape || cell.bgColourCache != cell.bgColour ) {
+					cell.bgColourCache = cell.bgColour;
+					cell.shapeCache = cell.shape;
+					var imageName = "symbols/g" + cell.shape + "/g" + cell.shape + "-c" + cell.bgColour + "-i.png";
+					cell.layerImage.src = imageName;
+				}
 			}
 		}
 	}
@@ -63,30 +72,12 @@ var SpartanImageScreen = function( width, height, target ) {
 		width: width,
 		height: height,
 
-		showFov: showFov,
+		update: updateInverse,
 
 		hackyFov: hackyFov,
 
 	}
 
-
-	/* Per-tile functions. The "inverse" functions are alternates meant to
-	   be used with the inverse image-set (which gives many choices for
-	   foreground colours instead of many choices for background colours).
-	 */
-	var setSymbol = function( letterName, fgColour, bgColour ) {
-		var imageName = "symbols/g" + letterName + "/g" + letterName + "-c" + fgColour + ".png";
-		this.layerImage.src = imageName;
-		this.layerColour.setAttribute( "STYLE", "background-color: #" + bgColour );
-	}
-
-	var setSymbolInverse = function( letterName, fgColour, bgColour ) {
-		var imageName = "symbols/g" + letterName + "/g" + letterName + "-c" + bgColour + "-i.png";
-		if( this.layerImage.src != imageName ) {
-			this.layerImage.src = imageName;
-		}
-		this.layerColour.setAttribute( "STYLE", "background-color: #" + fgColour );
-	}
 
 	for(var y = 0; y < height; y++) {
 		for(var x = 0; x < width; x++) {
@@ -117,10 +108,16 @@ var SpartanImageScreen = function( width, height, target ) {
 				layerImage: layerImage,
 				layerOverlay: layerOverlay,
 
-				setSymbol: setSymbolInverse,
-				visibility: 0,
-				
+				shapeCache: null,
+				fgColourCache: null,
+				bgColourCache: null,
 				visibilityCache: null,
+
+					/* These should be set by other code. */
+				shape: "2E",
+				fgColour: "000000",
+				bgColour: "000000",
+				visibility: 0,
 			};
 
 			cells[x][y] = tile;

@@ -31,7 +31,7 @@ $(document).ready(function() {
 		mapGen.generateMap("digDug");
 	});
 	startupLoader.schedule(function() {
-		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
+		player = Player("Player");
 		mapGen.map.addCreature(player, mapGen.spawnX, mapGen.spawnY);
 	});
 	startupLoader.schedule(function() {
@@ -95,6 +95,16 @@ $(document).keydown(function(e) {
 	return false;
 });
 
+var Player = function(name) {
+	var rv = Mobile(name, "@", [240, 240, 240], 100, new Faction( 'player' ) );
+
+	rv.message = function(msg) {
+		msgLog.append( msg );
+	}
+
+	return rv;
+}
+
 var Mobile = function(name, symbol, color, maxHp, faction) {
 	var tryMove = function(dx, dy) {
 		if (this.dead) {
@@ -108,7 +118,7 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 		} else if (newtile != null && newtile.mobile) {
 			this.tryAttack(newtile.mobile);
 		} else {
-			msgLog.append("Blocked!");
+			this.message( "Blocked!" );
 		}
 	}
 	
@@ -158,6 +168,8 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 		tryAttack: tryAttack,
 		distanceTo: distanceTo,
 		damage: damage,
+
+		message: function() {}
 	};
 	
 	return rv;

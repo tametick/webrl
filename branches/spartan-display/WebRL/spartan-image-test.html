@@ -6,6 +6,64 @@
 		<title>WebRL</title>
 
 		<script type="application/javascript" src="http://www.google.com/jsapi"></script>
+
+		<style type="text/css">
+
+		.spartan-cell {
+			position: absolute;
+			width: 18px;
+			height: 35px;
+		}
+
+		.spartan-colour-layer {
+			position: absolute;
+			width: 18px;
+			height: 35px;
+			left: 0;
+			right: 0;
+			z-index: 0;
+		}
+
+		.spartan-image-layer {
+			position: absolute;
+			width: 18px;
+			height: 35px;
+			left: 0;
+			right: 0;
+			z-index: 1;
+		}
+
+		.spartan-overlay-layer {
+			position: absolute;
+			width: 18px;
+			height: 35px;
+			left: 0;
+			right: 0;
+			z-index: 2;
+		}
+
+		.spartan-overlay-fog {
+			background-color: black;
+			
+			filter:alpha(opacity=50);
+			-moz-opacity:0.5;
+			-khtml-opacity: 0.5;
+			opacity: 0.5;
+
+			visibility: visible;
+		}
+
+		.spartan-overlay-none {
+			visibility: hidden;
+		}
+
+		.spartan-overlay-darkness {
+			background-color: black;
+			visibility: visible;
+		}
+
+
+		</style>
 	</head>
 	<body>
 		<h1>WebRL</h1>
@@ -17,42 +75,48 @@
 		</script>
 		<script type="application/javascript" src="./js/SpartanDisplay.js"></script>
 		<script type="application/javascript">
-			var scr = SpartanImageScreen( 80, 25, "screen" );
+			var w = 80, h = 25;
+			var scr = SpartanImageScreen( w, h, "screen" );
 
-			scr.setObjectAt( 40, 10, "images/red-dot.png" );
-			// Will disappear when you walk over it (not intentional). But
-			// note how it disappears when it's out of active view and
-			// reappears when back inside it.
+			for(var x=0;x<w;x++) {
+				for(var y=0;y<h;y++) {
+					// A red . on a gray background.
+					scr.cells[x][y].setSymbol( "2E", "ff0000", "808080" );
+				}
+			}
 
 			var px = 10, py = 10;
+			// A blue @ on a green background
+			scr.cells[px][py].setSymbol( "40", "0000ff", "00ff00" );
+
 			$(document).keypress(function(e) {
 				var e = window.event || e;
 				var code = (e.keyCode == 0) ? e.charCode : e.keyCode ;
+
+				var oldPx = px;
+				var oldPy = py;
+				
 				switch( code ) {
 					case 37:
-						scr.setObjectAt( px, py, null );
 						px--;
-						scr.setObjectAt( px, py, "images/red-dot.png" );
 						break;
 					case 38:
-						scr.setObjectAt( px, py, null );
 						py--;
-						scr.setObjectAt( px, py, "images/red-dot.png" );
 						break;
 					case 39:
-						scr.setObjectAt( px, py, null );
 						px++;
-						scr.setObjectAt( px, py, "images/red-dot.png" );
 						break;
 					case 40:
-						scr.setObjectAt( px, py, null );
 						py++;
-						scr.setObjectAt( px, py, "images/red-dot.png" );
 						break;
 					default:
 						return true;
 				}
-				scr.hackupdate( px, py );
+				if( oldPx != px || oldPy != py ) {
+					scr.cells[oldPx][oldPy].setSymbol( "2E", "ff0000", "808080" );
+					scr.cells[px][py].setSymbol( "40", "0000ff", "00ff00" );
+					scr.hackyFov( px, py );
+				}
 				return false;
 			});
 		</script>

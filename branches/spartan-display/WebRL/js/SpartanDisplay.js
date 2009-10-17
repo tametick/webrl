@@ -1,18 +1,13 @@
 var SpartanImageScreen = function( width, height, target ) {
 	var cells = [];
 
-			/*	Visibility, magic numbers.
+			/*	hackyVisibility, magic numbers.
 				None (0): nothing is visible (except table background)
 				Remembered (1): background layer visible, fog of war visible.
 				Full (2): background layer visible, object layer overrides.
 			*/
 	
-	var setObjectAt = function( x, y, o ) {
-		cells[x][y].obj = o;
-	}
-	
-	var hackupdate = function( px, py ) {
-		var t0 = new Date().getTime();
+	var hackyFov = function( px, py ) {
 		for(var x=0;x<this.width;x++) {
 			var col = cells[x];
 			for(var y=0;y<this.height;y++) {
@@ -30,51 +25,36 @@ var SpartanImageScreen = function( width, height, target ) {
 				} else {
 					cell.visibility = 2;
 				}
+			}
+		}
+		this.showFov();
+	}
 
-				// back to screen updatin'
-				if( cell.visibility != cell.lastVisibility ) {
-					cell.lastVisibility = cell.visibility;
-					switch( cell.visibility ) {
-						case 0:
-							cell.darknessLayer.setAttribute( "STYLE", "visibility: visible;" );
-							cell.backgroundLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							cell.objectLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							cell.fogLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							break;
-						case 1:
-							cell.darknessLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							cell.backgroundLayer.setAttribute( "STYLE", "visibility: visible;" );
-							cell.objectLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							cell.fogLayer.setAttribute( "STYLE", "visibility: visible;" );
-							break;
-						case 2:
-							cell.darknessLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							cell.fogLayer.setAttribute( "STYLE", "visibility: hidden;" );
-							break;
-					}
-				}
+	for(var x = 0; x < width; x++) {
+		cells[x] = [];
+	}
+	var tileWidth = 18;
+	var tileHeight = 35;
 
-				if( cell.visibility == 2 ) {
-					if( cell.obj != null ) {
-						cell.backgroundLayer.setAttribute( "STYLE", "visibility: hidden;" );
-						cell.objectLayer.setAttribute( "STYLE", "visibility: visible;" );
-						if( cell.obj != cell.lastObj ) {
-							cell.objectLayer.setAttribute( "SRC", cell.obj );
-							cell.lastObj = cell.lastObj;
-						}
+	var showFov = function() {
+		var classesVisible = "spartan-overlay-layer spartan-overlay-none";
+		var classesFoggy = "spartan-overlay-layer spartan-overlay-fog";
+		var classesDarkness = "spartan-overlay-layer spartan-overlay-darkness";
+		for(var x=0;x<this.width;x++) {
+			for(var y=0;y<this.height;y++) {
+				var cell = this.cells[x][y];
+				if( cell.visibilityCache != cell.visibility ) {
+					cell.visibilityCache = cell.visibility;
+					if( cell.visibility == 0 ) {
+						cell.layerOverlay.className = classesDarkness;
+					} else if( cell.visibility == 1 ) {
+						cell.layerOverlay.className = classesFoggy;
 					} else {
-						cell.backgroundLayer.setAttribute( "STYLE", "visibility: visible;" );
-						cell.objectLayer.setAttribute( "STYLE", "visibility: hidden;" );
+						cell.layerOverlay.className = classesVisible;
 					}
-				}
-
-				if( cell.visibility > 0 && cell.bg != cell.lastBg ) {
-					cell.backgroundLayer.setAttribute( "SRC", cell.bg );
-					cell.lastBg = cell.bg;
 				}
 			}
 		}
-		var t1 = new Date().getTime();
 	}
 
 	var rv = {
@@ -83,91 +63,76 @@ var SpartanImageScreen = function( width, height, target ) {
 		width: width,
 		height: height,
 
-		hackupdate: hackupdate,
-		setObjectAt: setObjectAt,
+		showFov: showFov,
+
+		hackyFov: hackyFov,
+
 	}
 
-	for(var x = 0; x < width; x++) {
-		cells[x] = [];
+
+	/* Per-tile functions. The "inverse" functions are alternates meant to
+	   be used with the inverse image-set (which gives many choices for
+	   foreground colours instead of many choices for background colours).
+	 */
+	var setSymbol = function( letterName, fgColour, bgColour ) {
+		var imageName = "symbols/g" + letterName + "/g" + letterName + "-c" + fgColour + ".png";
+		this.layerImage.src = imageName;
+		this.layerColour.setAttribute( "STYLE", "background-color: #" + bgColour );
 	}
-	var tileWidth = 32;
-	var tileHeight = 32;
-	var sizeString = "";
-	sizeString += "width: " + tileWidth + "px;";
-	sizeString += "height: " + tileHeight + "px;";
-	var outerCSS = "position: absolute; " + sizeString;
-	var innerCSS = "position: absolute; left: 0px; top: 0px; " + sizeString;
+
+	var setSymbolInverse = function( letterName, fgColour, bgColour ) {
+		var imageName = "symbols/g" + letterName + "/g" + letterName + "-c" + bgColour + "-i.png";
+		if( this.layerImage.src != imageName ) {
+			this.layerImage.src = imageName;
+		}
+		this.layerColour.setAttribute( "STYLE", "background-color: #" + fgColour );
+	}
 
 	for(var y = 0; y < height; y++) {
 		for(var x = 0; x < width; x++) {
+			var layerColour = document.createElement( "DIV" );
+				// The colour layer fills in the transparent parts of the
+				// image in the background or object layer (whichever is
+				// displayed).
+				// It is always visible (but sometimes hidden).
+			layerColour.className = "spartan-colour-layer";
+			layerColour.setAttribute( "STYLE", "background-color: #FADADD;" );
 
-			var containerDivFog = document.createElement( 'DIV' );
-			containerDivFog.setAttribute( "STYLE", innerCSS );
-			var fogElement = document.createElement('IMG' );
-			fogElement.setAttribute( "SRC", "images/fog.png" );
-			fogElement.setAttribute( "WIDTH", "32" );
-			fogElement.setAttribute( "HEIGHT", "32" );
-			fogElement.setAttribute( "STYLE", "visibility: hidden" );
-			containerDivFog.appendChild( fogElement );
+			var layerImage = document.createElement( "IMG" );
+				// The image layer(s) provide the actual shapes. It may be
+				// possible to do some optimization with multiple image
+				// layers (e.g. background and object).
+				// Exactly one image layer is always visible.
+			layerImage.className = "spartan-image-layer";
+			layerImage.src = "images/blank.png";
 
-			var containerDivDarkness = document.createElement( 'DIV' );
-			containerDivDarkness.setAttribute( "STYLE", innerCSS );
-			var darknessElement = document.createElement('IMG' );
-			darknessElement.setAttribute( "SRC", "images/darkness.png" );
-			darknessElement.setAttribute( "WIDTH", "32" );
-			darknessElement.setAttribute( "HEIGHT", "32" );
-			darknessElement.setAttribute( "STYLE", "visibility: hidden" );
-			containerDivDarkness.appendChild( darknessElement );
+			var layerOverlay = document.createElement( "DIV" );
+				// The overlay layer provides darkness and/or fog of war, by
+				// setting the opacity (and optionally background colour).
+				// The overlay layer may or may not be visible.
+			layerOverlay.className = "spartan-overlay-layer spartan-overlay-none";
 
-			var containerDivBackground = document.createElement( 'DIV' );
-			containerDivBackground.setAttribute( "STYLE", innerCSS );
-			var bgElement = document.createElement('IMG' );
-			bgElement.setAttribute( "SRC", "images/black-dot.png" );
-			bgElement.setAttribute( "WIDTH", "32" );
-			bgElement.setAttribute( "HEIGHT", "32" );
-			containerDivBackground.appendChild( bgElement );
+			var tile = {
+				layerColour: layerColour,
+				layerImage: layerImage,
+				layerOverlay: layerOverlay,
 
-			var containerDivObject = document.createElement( 'DIV' );
-			containerDivObject.setAttribute( "STYLE", innerCSS );
-			var objectElement = document.createElement('IMG' );
-			objectElement.setAttribute( "SRC", "images/blank.png" );
-			objectElement.setAttribute( "WIDTH", "32" );
-			objectElement.setAttribute( "HEIGHT", "32" );
-			objectElement.setAttribute( "STYLE", "visibility: hidden" );
-			containerDivObject.appendChild( objectElement );
-
-
-			var outerCSSFull = outerCSS;
-			outerCSSFull += "left: " + (x * tileWidth) + "px;";
-			outerCSSFull += "top: " + (y * tileHeight) + "px;";
-			var containerDivOuter = document.createElement( 'DIV' );
-			containerDivOuter.setAttribute( "STYLE", outerCSSFull );
-			containerDivOuter.appendChild( containerDivBackground );
-			containerDivOuter.appendChild( containerDivObject );
-			containerDivOuter.appendChild( containerDivFog );
-			containerDivOuter.appendChild( containerDivDarkness );
-
-			/*	Visibility, magic numbers.
-				None (0): nothing is visible (except table background)
-				Remembered (1): background layer visible, fog of war visible.
-				Full (2): background layer visible, object layer overrides.
-			*/
-
-			cells[x][y] = {
-				lastVisibility: "dummy",
+				setSymbol: setSymbolInverse,
 				visibility: 0,
-				backgroundLayer: bgElement,
-				objectLayer: objectElement,
-				fogLayer: fogElement,
-				darknessLayer: darknessElement,
+				
+				visibilityCache: null,
+			};
 
-				lastBg: "black-dot.png",
-				lastObj: null,
-				bg: "black-dot.png",
-				obj: null,
-			}
+			cells[x][y] = tile;
 
-			document.getElementById( target ).appendChild( containerDivOuter );
+
+			var parentDiv = document.createElement( "DIV" );
+			parentDiv.className = "spartan-cell";
+			parentDiv.setAttribute( "STYLE", "left: " + (x*tileWidth) + "px; top: " + (y*tileHeight) + "px;" );
+			parentDiv.appendChild( layerColour );
+			parentDiv.appendChild( layerImage );
+			parentDiv.appendChild( layerOverlay );
+			document.getElementById( target ).appendChild( parentDiv );
 		}
 	}
 

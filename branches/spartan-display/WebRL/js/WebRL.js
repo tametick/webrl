@@ -28,18 +28,21 @@ $(document).ready(function() {
 	// all steps of the map generation must also be part of the load
 	// sequence.
 	
-	var loader = LoadingScreen(function() {
+	startupLoader.schedule(function() {
 		mapGen.generateMap("digDug");
-	}, function() {
+	});
+	startupLoader.schedule(function() {
 		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
 		mapGen.map.addCreature(player, mapGen.spawnX, mapGen.spawnY);
-	}, function() {
+	});
+	startupLoader.schedule(function() {
 		mapGen.populateMap(5);
-	}, function() {
+	});
+	startupLoader.schedule(function() {
 		updateDisplay();
 	});
 	
-	loader.load();
+	startupLoader.load();
 });
 
 $(document).keydown(function(e) {
@@ -92,47 +95,6 @@ $(document).keydown(function(e) {
 	
 	return false;
 });
-
-// Call with LoadingScreen(func1, func2, func3), this class
-// will store the functions and the execute them after
-// using .load(). In order for the DOM to update, control
-// has to be given back to the browser. This achieves that.
-var LoadingScreen = function() {
-	var funcs = arguments;
-	
-	// This can eventually be changed to add a modern overlay
-	// load.
-	var load = function() {
-		var message = "Loading, please wait...<br />";
-		var numSteps = funcs.length;
-		
-		// Hide everything.
-		$("#loading_screen").html(message);
-		$("#screen").hide();
-		$("#canvasScreen").hide();
-		$("#hp-display").hide();
-		$("#msglog").hide();
-		
-		// For each function except last, put in queue.
-		for (var i = 0; i < funcs.length - 1; ++i) {
-			setTimeout(funcs[i], 1);
-			$("#loading_screen").html(message + ((i + 1) / numSteps * 100) + "%");
-		}
-		
-		setTimeout(funcs[funcs.length - 1], 1);
-		setTimeout(function() {
-			$("#screen").show();
-			$("#canvasScreen").show();
-			$("#hp-display").show();
-			$("#msglog").show();
-			$("#loading_screen").html("");
-		}, 1);
-	}
-	
-	return {
-		load: load,
-	};
-}
 
 var Mobile = function(name, symbol, color, maxHp, faction) {
 	var tryMove = function(dx, dy) {

@@ -1,6 +1,8 @@
 var scr;
 $(document).ready(function() {
-	scr = GameScreen(scrWidth, scrHeight);
+	startupLoader.schedule(function() {
+		scr = GameScreen(scrWidth, scrHeight);
+	});
 })
 
 var GameScreen = function(width, height) {

@@ -1,7 +1,9 @@
 var scr;
 $(document).ready(function() {
-	scr = SpartanImageScreen(scrWidth, scrHeight, "spartanScreen");
-	scr.revealEntireMap();
+	startupLoader.schedule(function() {
+		scr = SpartanImageScreen(scrWidth, scrHeight, "spartanScreen");
+		scr.revealEntireMap();
+	});
 })
 
 var SpartanImageScreen = function( width, height, target ) {

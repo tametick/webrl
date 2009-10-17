@@ -1,4 +1,3 @@
-var scr;
 var maps;
 var player;
 var msgLog;
@@ -18,7 +17,6 @@ function updateDisplay() {
 
 $(document).ready(function() {
 	maps = Maps(Map(mapWidth, mapHeight));
-	scr = GameScreen(scrWidth, scrHeight);
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
@@ -185,8 +183,8 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 	var rv = {
 		map: null,
 		tile: null,
-		color: color,
-		symbol: symbol,
+		color: scr.colour( color ),
+		symbol: scr.symbol( symbol ),
 		maxHp: maxHp,
 		hp: maxHp,
 		dead: false,

@@ -1,3 +1,8 @@
+var scr;
+$(document).ready(function() {
+	scr = GameScreen(scrWidth, scrHeight);
+})
+
 var GameScreen = function(width, height) {
 	var clearAll = function() {
 		cnvs.ctx.fillStyle = "rgb(0, 0, 0)";
@@ -17,6 +22,17 @@ var GameScreen = function(width, height) {
 		height: height,
 		clearAll: clearAll,
 		putCell: putCell,
+
+		/* Abstraction layer functions. Since the Spartan interface was
+		   written to fit this one, these are just identity functions
+		   or no-ops. */
+		symbol: function( s ) {
+			return s;
+		},
+		colour: function( rgb ) {
+			return rgb;
+		},
+		update: function() {},
 	};
 }
 

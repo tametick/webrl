@@ -37,8 +37,8 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		y: y,
 		traversible: traversible,
 		visible: false,
-		symbol: symbol,
-		color: color,
+		symbol: scr.symbol( symbol ),
+		color: scr.colour( color ),
 		mobile: null,
 		
 		mayEnter: mayEnter,
@@ -65,6 +65,8 @@ var Map = function(width, height) {
 		for (var yi = 0; yi < height; yi++) 
 			for (var xi = 0; xi < width; xi++) 
 				this.tiles[[xi, yi]].paint(dx, dy, scrWidth, scrHeight);
+
+		scr.update();
 	}
 	
 	var setTile = function(x, y, tile) {

@@ -1,3 +1,9 @@
+var scr;
+$(document).ready(function() {
+	scr = SpartanImageScreen(scrWidth, scrHeight, "spartanScreen");
+	scr.revealEntireMap();
+})
+
 var SpartanImageScreen = function( width, height, target ) {
 	var cells = [];
 
@@ -114,16 +120,31 @@ var SpartanImageScreen = function( width, height, target ) {
 		dirtyX: [],
 		dirtyY: [],
 
+		revealEntireMap: function() {
+			for(var x=0;x<this.width;x++) {
+				for(var y=0;y<this.height;y++) {
+					this.cells[x][y].visibility = 2;
+				}
+			}
+		},
+
 		/* These are conversion functions, meant for an abstraction layer. Their
 		   output must be cached, otherwise performance will suffer needlessly.
 		   Do not call them once for every screen update!
 		*/
-		colour: function(r,g,b) {
+		colour: function(rgb) {
+			var r = rgb[0];
+			var g = rgb[1];
+			var b = rgb[2];
 			return (r.toString(16) + g.toString(16) + b.toString(16)).toUpperCase();
 		},
 		symbol: function(s) {
 			return s.charCodeAt(0).toString(16).toUpperCase();
 		},
+		putCell: function(x, y, symbol, colour) {
+			this.cells[x][y].set( symbol, colour, "000000" );
+		},
+		clearAll: function() {},
 	}
 
 

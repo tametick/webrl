@@ -2,7 +2,6 @@ var maps;
 var player;
 var msgLog;
 
-var scrWidth = 40, scrHeight = 20;
 var mapWidth = 100, mapHeight = 50;
 
 function updateDisplay() {

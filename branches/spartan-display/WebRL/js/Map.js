@@ -1,25 +1,74 @@
+var Tile = function(map, symbol, color, x, y, traversible) {
+	var mayEnter = function(mob) {
+		if (!this.traversible) {
+			return false;
+		}
+		if (this.mobile) {
+			return false;
+		}
+		return true;
+	}
+	
+	var mobileEnter = function(mob) {
+		this.mobile = mob;
+	}
+	
+	var mobileLeave = function() {
+		this.mobile = null;
+	}
+	
+	var getNeighbour = function(dx, dy) {
+		return this.map.getTile(this.x + dx, this.y + dy);
+	}
+	
+	var paint = function(dx, dy, scrWidth, scrHeight) {
+		if (x + dx >= 0 && y + dy >= 0 && x + dx < scrWidth && y + dy < scrHeight) {
+			if (this.mobile) {
+				scr.putCell(x + dx, y + dy, this.mobile.symbol, this.mobile.color);
+			} else {
+				scr.putCell(x + dx, y + dy, this.symbol, this.color);
+			}
+		}
+	}
+	
+	return {
+		map: map,
+		x: x,
+		y: y,
+		traversible: traversible,
+		visible: false,
+		symbol: symbol,
+		color: color,
+		mobile: null,
+		
+		mayEnter: mayEnter,
+		mobileEnter: mobileEnter,
+		mobileLeave: mobileLeave,
+		paint: paint,
+		getNeighbour: getNeighbour,
+	}
+}
+
 var Map = function(width, height) {
 	var tiles = [];
-	var dirty = [];
 	var tickCounter = 0;
 	
 	var creatures = [];
 	var controllers = [];
 	
-	var addDirty = function(tile) {
-		this.dirty.push([tile.x, tile.y]);
+	var clear = function() {
+		scr.clearAll();
 	}
 	
-	var paint = function() {
-		while (this.dirty.length > 0) {
-			var xy = this.dirty.pop();
-			this.tiles[xy].paint();
-		}
+	var paint = function(dx, dy, scrWidth, scrHeight) {
+		clear();
+		for (var yi = 0; yi < height; yi++) 
+			for (var xi = 0; xi < width; xi++) 
+				this.tiles[[xi, yi]].paint(dx, dy, scrWidth, scrHeight);
 	}
 	
 	var setTile = function(x, y, tile) {
 		this.tiles[[x, y]] = tile;
-		this.dirty.push([x, y]);
 	}
 	
 	var getTile = function(x, y) {
@@ -60,14 +109,12 @@ var Map = function(width, height) {
 	
 	return {
 		tiles: tiles,
-		dirty: dirty,
 		creatures: creatures,
 		controllers: controllers,
 		
 		paint: paint,
 		getTile: getTile,
 		setTile: setTile,
-		addDirty: addDirty,
 		removeCreature: removeCreature,
 		addCreature: addCreature,
 	};
@@ -88,53 +135,5 @@ var Maps = function(firstMap) {
 		mapList: mapList,
 		getMap: getMap,
 		getCurrentMap: getCurrentMap,
-	};
-}
-
-var MapGen = function(map, seed) {
-	var map = map;
-	var seed = seed;
-	
-	// The args could be anything, really.
-	var generateMap = function(w, h, args) {
-		if (args == "test") {
-			if (!this.map) this.map = Map(w, h);
-			
-			for (var x = 0; x < w; x++) {
-				for (var y = 0; y < h; y++) {
-					var tile;
-					if (x == 0 || y == 0 || x == (w - 1) || y == (h - 1)) {
-						tile = Tile(this.map, x, y, false, ColoredChar('#', 'aqua'));
-					} else {
-						tile = Tile(this.map, x, y, true, ColoredChar('.', 'red'));
-					}
-					this.map.setTile(x, y, tile);
-				}
-			}
-		}
-	}
-	
-	// Could be anything for the args as well.
-	var populateMap = function(args) {
-		if (args == "test") {
-			var colorfactions = ['darkRed', 'salmon', 'darkGreen', 'lightGreen'];
-	
-			for (var faction = 0; faction < 4; faction++) {
-				for (var monster = 0; monster < 4; monster++) {
-					var monster1 = Mobile("Monster", ColoredChar("M", colorfactions[faction]), Math.random() * 10 + 10, new Faction(faction));
-					this.map.addCreature(monster1, 7 + monster * 8, 2 + faction * 5);
-					
-					var hunter = new KillAllAI(monster1, this.map);
-					this.map.controllers.push(hunter);
-				}
-			}
-		}
-	}
-	
-	return {
-		map: map,
-		seed: seed,
-		generateMap: generateMap,
-		populateMap: populateMap,
 	};
 }

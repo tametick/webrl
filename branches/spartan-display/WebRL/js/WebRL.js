@@ -3,50 +3,50 @@ var maps;
 var player;
 var msgLog;
 
+var scrWidth = 40, scrHeight = 20;
+var mapWidth = 100, mapHeight = 50;
+
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
 	msgLog.renderToHtml();
-	maps.getCurrentMap().paint();
+	if (player.tile) 
+		maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
+	else 
+		// If the player is dead
+		maps.getCurrentMap().paint(0, 0, this.scr.width, this.scr.height);
 }
 
 $(document).ready(function() {
-	var w = 40, h = 20;
-	maps = Maps(Map(w, h));
-	scr = Screen(w, h);
+	maps = Maps(Map(mapWidth, mapHeight));
+	scr = GameScreen(scrWidth, scrHeight);
 	msgLog = new MsgLog;
 	
 	var currentMap = maps.getCurrentMap();
 	
-	var mapGen = MapGen(currentMap);
+	var mapGen = MapGen(currentMap, mapWidth, mapHeight);
 	
 	// If one portion of map generation is used in a load sequence,
 	// all steps of the map generation must also be part of the load
 	// sequence.
 	
 	var loader = LoadingScreen(function() {
-		mapGen.generateMap(w, h, 'test');
-	},
-	
-	function() {
-		player = Mobile("Player", ColoredChar('@', 'blue'), 100, new Faction('player'));
-		mapGen.map.addCreature(player, 2, 2);
-	},
-	
-	function() {
-		mapGen.populateMap('test');
-	},
-	
-	function() {
+		mapGen.generateMap("digDug");
+	}, function() {
+		player = Mobile("Player", '@', [240, 240, 240], 100, new Faction('player'));
+		mapGen.map.addCreature(player, mapGen.spawnX, mapGen.spawnY);
+	}, function() {
+		mapGen.populateMap(5);
+	}, function() {
 		updateDisplay();
 	});
 	
 	loader.load();
 });
 
-$(document).keypress(function(e) {
+$(document).keydown(function(e) {
 	var e = window.event || e;
 	
-	var code = (e.keyCode == 0) ? e.charCode : e.keyCode ;
+	var code = e.keyCode;
 	
 	switch (code) {
 		case 37:
@@ -61,19 +61,20 @@ $(document).keypress(function(e) {
 		case 40:
 			player.tryMove(0, 1);
 			break;
-			// Test code, generates a new level after pressing 'r'
-		case 114: // 'r'
+		// Test code, generates a new level after pressing 'r'
+		case 82: // 'r'
 			var loader = LoadingScreen(function() {
-				maps.mapList.push(Map(40, 20));
-				var mapGen = MapGen(maps.getCurrentMap());
+				player.hp = player.maxHp;
+				player.dead = false;
+				maps.mapList.push(Map(mapWidth, mapHeight));
+				var mapGen = MapGen(maps.getCurrentMap(), mapWidth, mapHeight);
 				
-				mapGen.generateMap(40, 20, 'test');
-				player.changeMap(mapGen.map, 2, 2);
+				mapGen.generateMap('digDug');
+				player.changeMap(mapGen.map, mapGen.spawnX, mapGen.spawnY);
+				mapGen.populateMap(5);
 				
-				msgLog.append("Entered dungeon level: " + maps.mapList.length);
-			},
-			
-			function() {
+				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + mapGen.spawnX + ", " + mapGen.spawnY);
+			}, function() {
 				updateDisplay();
 			});
 			
@@ -104,22 +105,24 @@ var LoadingScreen = function() {
 	var load = function() {
 		var message = "Loading, please wait...<br />";
 		var numSteps = funcs.length;
-	
+		
 		// Hide everything.
 		$("#loading_screen").html(message);
 		$("#screen").hide();
+		$("#canvasScreen").hide();
 		$("#hp-display").hide();
 		$("#msglog").hide();
 		
 		// For each function except last, put in queue.
 		for (var i = 0; i < funcs.length - 1; ++i) {
 			setTimeout(funcs[i], 1);
-			$("#loading_screen").html(message + ((i+1) / numSteps * 100) + "%");
+			$("#loading_screen").html(message + ((i + 1) / numSteps * 100) + "%");
 		}
 		
 		setTimeout(funcs[funcs.length - 1], 1);
 		setTimeout(function() {
 			$("#screen").show();
+			$("#canvasScreen").show();
 			$("#hp-display").show();
 			$("#msglog").show();
 			$("#loading_screen").html("");
@@ -131,19 +134,7 @@ var LoadingScreen = function() {
 	};
 }
 
-var ColoredChar = function(ch, charColor) {
-	var toString = function() {
-		var s = "<span class=\"" + charColor + "\">" + ch + "</span>";
-		return s;
-	};
-	return {
-		ch: ch,
-		charColor: charColor,
-		toString: toString
-	}
-}
-
-var Mobile = function(name, appearance, maxHp, faction) {
+var Mobile = function(name, symbol, color, maxHp, faction) {
 	var tryMove = function(dx, dy) {
 		if (this.dead) {
 			return;
@@ -161,7 +152,8 @@ var Mobile = function(name, appearance, maxHp, faction) {
 	}
 	
 	var changeMap = function(map, x, y) {
-		this.map.removeCreature(this);
+		if (this.map) 
+			this.map.removeCreature(this);
 		this.map = map;
 		this.tile = this.map.getTile(x, y);
 		this.tile.mobileEnter(this);
@@ -192,7 +184,8 @@ var Mobile = function(name, appearance, maxHp, faction) {
 	var rv = {
 		map: null,
 		tile: null,
-		appearance: appearance,
+		color: color,
+		symbol: symbol,
 		maxHp: maxHp,
 		hp: maxHp,
 		dead: false,
@@ -207,81 +200,4 @@ var Mobile = function(name, appearance, maxHp, faction) {
 	};
 	
 	return rv;
-}
-
-var Tile = function(map, x, y, traversible, appearance) {
-	var mayEnter = function(mob) {
-		if (!this.traversible) {
-			return false;
-		}
-		if (this.mobile) {
-			return false;
-		}
-		return true;
-	}
-	
-	var mobileEnter = function(mob) {
-		this.mobile = mob;
-		this.map.addDirty(this);
-	}
-	
-	var mobileLeave = function() {
-		this.mobile = null;
-		this.map.addDirty(this);
-	}
-	
-	var getNeighbour = function(dx, dy) {
-		return this.map.getTile(this.x + dx, this.y + dy);
-	}
-	
-	var paint = function() {
-		if (this.mobile) {
-			scr.putCell(this.x, this.y, this.mobile.appearance);
-		} else {
-			scr.putCell(this.x, this.y, this.appearance);
-		}
-	}
-	
-	var toString = function() {
-		return "Tile(" + this.x + "," + this.y + ")";
-	}
-	
-	return {
-		map: map,
-		x: x,
-		y: y,
-		traversible: traversible,
-		appearance: appearance,
-		mobile: null,
-		
-		mayEnter: mayEnter,
-		mobileEnter: mobileEnter,
-		mobileLeave: mobileLeave,
-		paint: paint,
-		toString: toString,
-		getNeighbour: getNeighbour,
-	}
-}
-
-var Screen = function(width, height) {
-	var s = '<table class="display" >';
-	
-	for (var y = 0; y < height; y++) {
-		s += '<tr class="display">';
-		for (var x = 0; x < width; x++) {
-			s += '<td class="display" id="tile' + x + "_" + y + '"></td>';
-		}
-		s += '</tr>';
-	}
-	s += '</table>';
-	$("#screen").html(s);
-	
-	
-	var putCell = function(x, y, appearance) {
-		$("#tile" + x + "_" + y).html(appearance.toString());
-	}
-	
-	return {
-		putCell: putCell,
-	};
 }

@@ -1,152 +1,18 @@
-span.aliceBlue  { color: #F0F8FF; }
-span.antiqueWhite  { color: #FAEBD7; }
-span.aqua  { color: #00FFFF; }
-span.aquamarine  { color: #7FFFD4; }
-span.azure  { color: #F0FFFF; }
-span.beige  { color: #F5F5DC; }
-span.bisque  { color: #FFE4C4; }
-span.black  { color: #000000; }
-span.blanchedAlmond  { color: #FFEBCD; }
-span.blue  { color: #0000FF; }
-span.blueViolet  { color: #8A2BE2; }
-span.brown  { color: #A52A2A; }
-span.burlyWood  { color: #DEB887; }
-span.cadetBlue  { color: #5F9EA0; }
-span.chartreuse  { color: #7FFF00; }
-span.chocolate  { color: #D2691E; }
-span.coral  { color: #FF7F50; }
-span.cornflowerBlue  { color: #6495ED; }
-span.cornsilk  { color: #FFF8DC; }
-span.crimson  { color: #DC143C; }
-span.cyan  { color: #00FFFF; }
-span.darkBlue  { color: #00008B; }
-span.darkCyan  { color: #008B8B; }
-span.darkGoldenRod  { color: #B8860B; }
-span.darkGray  { color: #A9A9A9; }
-span.darkGreen  { color: #006400; }
-span.darkKhaki  { color: #BDB76B; }
-span.darkMagenta  { color: #8B008B; }
-span.darkOliveGreen  { color: #556B2F; }
-span.darkorange  { color: #FF8C00; }
-span.darkOrchid  { color: #9932CC; }
-span.darkRed  { color: #8B0000; }
-span.darkSalmon  { color: #E9967A; }
-span.darkSeaGreen  { color: #8FBC8F; }
-span.darkSlateBlue  { color: #483D8B; }
-span.darkSlateGray  { color: #2F4F4F; }
-span.darkTurquoise  { color: #00CED1; }
-span.darkViolet  { color: #9400D3; }
-span.deepPink  { color: #FF1493; }
-span.deepSkyBlue  { color: #00BFFF; }
-span.dimGray  { color: #696969; }
-span.dodgerBlue  { color: #1E90FF; }
-span.fireBrick  { color: #B22222; }
-span.floralWhite  { color: #FFFAF0; }
-span.forestGreen  { color: #228B22; }
-span.fuchsia  { color: #FF00FF; }
-span.gainsboro  { color: #DCDCDC; }
-span.ghostWhite  { color: #F8F8FF; }
-span.gold  { color: #FFD700; }
-span.goldenRod  { color: #DAA520; }
-span.gray  { color: #808080; }
-span.green  { color: #008000; }
-span.greenYellow  { color: #ADFF2F; }
-span.honeyDew  { color: #F0FFF0; }
-span.hotPink  { color: #FF69B4; }
-span.indianRed   { color: #CD5C5C; }
-span.indigo   { color: #4B0082; }
-span.ivory  { color: #FFFFF0; }
-span.khaki  { color: #F0E68C; }
-span.lavender  { color: #E6E6FA; }
-span.lavenderBlush  { color: #FFF0F5; }
-span.lawnGreen  { color: #7CFC00; }
-span.lemonChiffon  { color: #FFFACD; }
-span.lightBlue  { color: #ADD8E6; }
-span.lightCoral  { color: #F08080; }
-span.lightCyan  { color: #E0FFFF; }
-span.lightGoldenRodYellow  { color: #FAFAD2; }
-span.lightGrey  { color: #D3D3D3; }
-span.lightGreen  { color: #90EE90; }
-span.lightPink  { color: #FFB6C1; }
-span.lightSalmon  { color: #FFA07A; }
-span.lightSeaGreen  { color: #20B2AA; }
-span.lightSkyBlue  { color: #87CEFA; }
-span.lightSlateGray  { color: #778899; }
-span.lightSteelBlue  { color: #B0C4DE; }
-span.lightYellow  { color: #FFFFE0; }
-span.lime  { color: #00FF00; }
-span.limeGreen  { color: #32CD32; }
-span.linen  { color: #FAF0E6; }
-span.magenta  { color: #FF00FF; }
-span.maroon  { color: #800000; }
-span.mediumAquaMarine  { color: #66CDAA; }
-span.mediumBlue  { color: #0000CD; }
-span.mediumOrchid  { color: #BA55D3; }
-span.mediumPurple  { color: #9370D8; }
-span.mediumSeaGreen  { color: #3CB371; }
-span.mediumSlateBlue  { color: #7B68EE; }
-span.mediumSpringGreen  { color: #00FA9A; }
-span.mediumTurquoise  { color: #48D1CC; }
-span.mediumVioletRed  { color: #C71585; }
-span.midnightBlue  { color: #191970; }
-span.mintCream  { color: #F5FFFA; }
-span.mistyRose  { color: #FFE4E1; }
-span.moccasin  { color: #FFE4B5; }
-span.navajoWhite  { color: #FFDEAD; }
-span.navy  { color: #000080; }
-span.oldLace  { color: #FDF5E6; }
-span.olive  { color: #808000; }
-span.oliveDrab  { color: #6B8E23; }
-span.orange  { color: #FFA500; }
-span.orangeRed  { color: #FF4500; }
-span.orchid  { color: #DA70D6; }
-span.paleGoldenRod  { color: #EEE8AA; }
-span.paleGreen  { color: #98FB98; }
-span.paleTurquoise  { color: #AFEEEE; }
-span.paleVioletRed  { color: #D87093; }
-span.papayaWhip  { color: #FFEFD5; }
-span.peachPuff  { color: #FFDAB9; }
-span.peru  { color: #CD853F; }
-span.pink  { color: #FFC0CB; }
-span.plum  { color: #DDA0DD; }
-span.powderBlue  { color: #B0E0E6; }
-span.purple  { color: #800080; }
-span.red  { color: #FF0000; }
-span.rosyBrown  { color: #BC8F8F; }
-span.royalBlue  { color: #4169E1; }
-span.saddleBrown  { color: #8B4513; }
-span.salmon  { color: #FA8072; }
-span.sandyBrown  { color: #F4A460; }
-span.seaGreen  { color: #2E8B57; }
-span.seaShell  { color: #FFF5EE; }
-span.sienna  { color: #A0522D; }
-span.silver  { color: #C0C0C0; }
-span.skyBlue  { color: #87CEEB; }
-span.slateBlue  { color: #6A5ACD; }
-span.slateGray  { color: #708090; }
-span.snow  { color: #FFFAFA; }
-span.springGreen  { color: #00FF7F; }
-span.steelBlue  { color: #4682B4; }
-span.tan  { color: #D2B48C; }
-span.teal  { color: #008080; }
-span.thistle  { color: #D8BFD8; }
-span.tomato  { color: #FF6347; }
-span.turquoise  { color: #40E0D0; }
-span.violet  { color: #EE82EE; }
-span.wheat  { color: #F5DEB3; }
-span.white  { color: #FFFFFF; }
-span.whiteSmoke  { color: #F5F5F5; }
-span.yellow  { color: #FFFF00; }
-span.yellowGreen  { color: #9ACD32; }
-
 body {
 	text-align: center;
-	background-color: gray;
-	font-size:100%;
+	font-family: Monospace;
+	background-color: #000000;
+	color: #FFFFFF;
+	font-size: 100%;
 }
 
 span {
-	font-family: monospace;
+	font-family: Monospace;
+	font-size: 1em;
+}
+
+font {
+	font-family: Monospace;
 	font-size: 1em;
 }
 
@@ -178,3 +44,15 @@ td.display {
 	margin-bottom: 0pt;
 	margin-top: 2pt;
 }
+
+#canvasScreen {
+	padding: 10px;
+	border:2px solid #888888;
+}
+
+canvas {
+	border: 1px solid black;
+	font-family: monospace;
+	font-size: 1em;
+}
+

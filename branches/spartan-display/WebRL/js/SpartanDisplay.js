@@ -33,8 +33,8 @@ var SpartanImageScreen = function( width, height, target ) {
 	for(var x = 0; x < width; x++) {
 		cells[x] = [];
 	}
-	var tileWidth = 18;
-	var tileHeight = 35;
+	var tileWidth = 13;
+	var tileHeight = 23;
 
 	var showFov = function() {
 		var classesVisible = "spartan-overlay-layer spartan-overlay-none";

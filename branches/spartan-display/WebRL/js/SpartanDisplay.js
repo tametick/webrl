@@ -66,16 +66,53 @@ var SpartanImageScreen = function( width, height, target ) {
 		}
 	}
 
-	var rv = {
+	var updateInverseDirty = function() {
+		var classesVisible = "spartan-overlay-layer spartan-overlay-none";
+		var classesFoggy = "spartan-overlay-layer spartan-overlay-fog";
+		var classesDarkness = "spartan-overlay-layer spartan-overlay-darkness";
+		var dirtyX = this.dirtyX;
+		var dirtyY = this.dirtyY;
+		this.dirtyX = [];
+		this.dirtyY = [];
+		for(var i=0;i<dirtyX.length;i++) {
+			var x = dirtyX[i];
+			var y = dirtyY[i];
+			var cell = this.cells[x][y];
+			if( cell.visibilityCache != cell.visibility ) {
+				cell.visibilityCache = cell.visibility;
+				if( cell.visibility == 0 ) {
+					cell.layerOverlay.className = classesDarkness;
+				} else if( cell.visibility == 1 ) {
+					cell.layerOverlay.className = classesFoggy;
+				} else {
+					cell.layerOverlay.className = classesVisible;
+				}
+			}
+			if( cell.fgColourCache != cell.fgColour ) {
+				cell.fgColourCache = cell.fgColour;
+				cell.layerColour.setAttribute( "STYLE", "background-color: #" + cell.fgColour );
+			}
+			if( cell.shapeCache != cell.shape || cell.bgColourCache != cell.bgColour ) {
+				cell.bgColourCache = cell.bgColour;
+				cell.shapeCache = cell.shape;
+				var imageName = "symbols/g" + cell.shape + "/g" + cell.shape + "-c" + cell.bgColour + "-i.png";
+				cell.layerImage.src = imageName;
+			}
+		}
+	}
+
+	var displayObject = {
 		cells: cells,
 
 		width: width,
 		height: height,
 
-		update: updateInverse,
+		update: updateInverseDirty,
 
 		hackyFov: hackyFov,
 
+		dirtyX: [],
+		dirtyY: [],
 	}
 
 
@@ -108,6 +145,9 @@ var SpartanImageScreen = function( width, height, target ) {
 				layerImage: layerImage,
 				layerOverlay: layerOverlay,
 
+				x: x,
+				y: y,
+
 				shapeCache: null,
 				fgColourCache: null,
 				bgColourCache: null,
@@ -118,6 +158,14 @@ var SpartanImageScreen = function( width, height, target ) {
 				fgColour: "000000",
 				bgColour: "000000",
 				visibility: 0,
+
+				set: function( sh, fg, bg ) {
+					this.shape = sh;
+					this.fgColour = fg;
+					this.bgColour = bg;
+					displayObject.dirtyX.push( this.x );
+					displayObject.dirtyY.push( this.y );
+				},
 			};
 
 			cells[x][y] = tile;
@@ -133,6 +181,6 @@ var SpartanImageScreen = function( width, height, target ) {
 		}
 	}
 
-	return rv;
+	return displayObject;
 }
 

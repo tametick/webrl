@@ -81,17 +81,13 @@
 			for(var x=0;x<w;x++) {
 				for(var y=0;y<h;y++) {
 					// A red . on a gray background.
-					scr.cells[x][y].shape = "2E";
-					scr.cells[x][y].fgColour = "ff0000";
-					scr.cells[x][y].bgColour = "808080";
+					scr.cells[x][y].set( "2E", "ff0000", "808080" );
 				}
 			}
 
 			var px = 10, py = 10;
 			// A blue @ on a green background
-			scr.cells[px][py].shape = "40";
-			scr.cells[px][py].fgColour = "0000ff";
-			scr.cells[px][py].bgColour = "00ff00";
+			scr.cells[px][py].set( "40", "0000ff", "808080" );
 
 			$(document).keypress(function(e) {
 				var e = window.event || e;
@@ -120,17 +116,11 @@
 					for(var x=0;x<w;x++) {
 						for(var y=0;y<h;y++) {
 							// This is just a stress test..
-							scr.cells[x][y].shape = "2E";
-							scr.cells[x][y].fgColour = "ff0000";
-							scr.cells[x][y].bgColour = "808080";
+							scr.cells[x][y].set( "2E", "ff0000", "808080" );
 						}
 					}
-					scr.cells[oldPx][oldPy].shape = "2E";
-					scr.cells[oldPx][oldPy].fgColour = "ff0000";
-					scr.cells[oldPx][oldPy].bgColour = "808080";
-					scr.cells[px][py].shape = "40";
-					scr.cells[px][py].fgColour = "0000ff";
-					scr.cells[px][py].bgColour = "00ff00";
+					scr.cells[oldPx][oldPy].set( "2E", "ff0000", "808080" );
+					scr.cells[px][py].set( "40", "0000ff", "808080" );
 					scr.hackyFov( px, py );
 					scr.update();
 				}

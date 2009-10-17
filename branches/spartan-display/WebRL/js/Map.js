@@ -58,15 +58,36 @@ var Map = function(width, height) {
 	var clear = function() {
 		scr.clearAll();
 	}
+
+	var center = function(x, y) {
+		this.dx = scr.width / 2 - x;
+		this.dy = scr.height / 2 - y;
+	}
+
+	var maybeRecenter = function(x,y, mzl) {
+		if( this.dx === null || this.dy === null ) {
+			this.center( x, y );
+		}
+		// Now assumes the player is on-screen.
+		var px = x + this.dx;
+		var py = y + this.dy;
+		if( Math.min( Math.abs(px), Math.abs(py), Math.abs(scr.width-1-px), Math.abs(scr.height-1-py) ) < mzl ) {
+			this.center( x, y );
+		}
+	}
 	
-	var paint = function(dx, dy, scrWidth, scrHeight) {
+	var paint = function() {
 		/* physical + delta = screen */
+		var dx = this.dx;
+		var dy = this.dy;
 		clear();
-		for(var sx=0;sx<scrWidth;sx++) {
-			for(var sy=0;sy<scrHeight;sy++) {
+		for(var sx=0;sx<scr.width;sx++) {
+			for(var sy=0;sy<scr.height;sy++) {
 				var tile = this.tiles[[sx-dx,sy-dy]];
 				if( tile != null ) {
 					tile.paint( sx, sy );
+				} else {
+					scr.nullpaint( sx, sy );
 				}
 			}
 		}
@@ -126,7 +147,12 @@ var Map = function(width, height) {
 		tilesMD: tilesMD,
 		creatures: creatures,
 		controllers: controllers,
-		
+
+		dx: null,
+		dy: null,
+		maybeRecenter: maybeRecenter,
+		center: center,
+
 		paint: paint,
 		getTile: getTile,
 		setTile: setTile,

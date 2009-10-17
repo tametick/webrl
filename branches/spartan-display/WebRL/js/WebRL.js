@@ -7,12 +7,13 @@ var mapWidth = 100, mapHeight = 50;
 
 function updateDisplay() {
 	$("#hp-display").html("" + player.hp + "/" + player.maxHp);
+	var map = maps.getCurrentMap();
+	var modifiedZeldaLimit = 5;
 	msgLog.renderToHtml();
-	if (player.tile) 
-		maps.getCurrentMap().paint(this.scr.width / 2 - player.tile.x, this.scr.height / 2 - player.tile.y, this.scr.width, this.scr.height);
-	else 
-		// If the player is dead
-		maps.getCurrentMap().paint(0, 0, this.scr.width, this.scr.height);
+	if(player.tile) {
+		map.maybeRecenter( player.tile.x, player.tile.y, modifiedZeldaLimit );
+	}
+	maps.getCurrentMap().paint();
 }
 
 $(document).ready(function() {

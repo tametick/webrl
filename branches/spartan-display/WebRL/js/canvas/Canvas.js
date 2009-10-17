@@ -33,6 +33,7 @@ var GameScreen = function(width, height) {
 			return rgb;
 		},
 		update: function() {},
+		nullpaint: function(x,y) {},
 	};
 }
 

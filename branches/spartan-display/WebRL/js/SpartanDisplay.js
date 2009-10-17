@@ -145,6 +145,9 @@ var SpartanImageScreen = function( width, height, target ) {
 			this.cells[x][y].set( symbol, colour, "000000" );
 		},
 		clearAll: function() {},
+		nullpaint: function(x,y) {
+			this.cells[x][y].set( "20", "000000", "808080" );
+		}
 	}
 
 
@@ -195,8 +198,10 @@ var SpartanImageScreen = function( width, height, target ) {
 					this.shape = sh;
 					this.fgColour = fg;
 					this.bgColour = bg;
-					displayObject.dirtyX.push( this.x );
-					displayObject.dirtyY.push( this.y );
+					if( this.shape != this.shapeCache || this.fgColour != this.fgColourCache || this.bgColour != this.bgColourCache ) {
+						displayObject.dirtyX.push( this.x );
+						displayObject.dirtyY.push( this.y );
+					}
 				},
 			};
 

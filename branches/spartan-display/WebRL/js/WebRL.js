@@ -47,6 +47,7 @@ $(document).keydown(function(e) {
 	var e = window.event || e;
 	
 	var code = e.keyCode;
+
 	
 	switch (code) {
 		case 37:

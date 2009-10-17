@@ -113,6 +113,17 @@ var SpartanImageScreen = function( width, height, target ) {
 
 		dirtyX: [],
 		dirtyY: [],
+
+		/* These are conversion functions, meant for an abstraction layer. Their
+		   output must be cached, otherwise performance will suffer needlessly.
+		   Do not call them once for every screen update!
+		*/
+		colour: function(r,g,b) {
+			return (r.toString(16) + g.toString(16) + b.toString(16)).toUpperCase();
+		},
+		symbol: function(s) {
+			return s.charCodeAt(0).toString(16).toUpperCase();
+		},
 	}
 
 

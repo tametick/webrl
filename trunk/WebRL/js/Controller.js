@@ -97,3 +97,32 @@ KillAllAI.prototype.think = function() {
 	if (dy != 0) 
 		Controller.prototype.move.call(this, 0, dy / Math.abs(dy));
 }
+
+// player hunter AI, can only follow scent (thus only hostile to player)
+ScentFollowerAI.prototype = Controller;
+ScentFollowerAI.constructor = ScentFollowerAI;
+
+function ScentFollowerAI(toControl, livesIn) {
+	Controller.call(this, toControl, livesIn);
+}
+
+ScentFollowerAI.prototype.think = function() {
+	var direction = this.puppet.tile.scentDirection;
+	if( direction ) {
+		var targetTile = this.puppet.tile.getNeighbour( direction[0], direction[1] );
+		var targetMobile = targetTile.mobile;
+		if( targetMobile ) {
+			if( targetMobile.isPlayer ) {
+				this.puppet.tryAttack( targetMobile );
+			}
+		} else {
+			this.puppet.tryMove( direction[0], direction[1] );
+		}
+	} else {
+		var dx = Math.floor( Math.random() * 3 ) - 1;
+		var dy = Math.floor( Math.random() * 3 ) - 1;
+		if( dx || dy ) {
+			this.puppet.tryMove( dx, dy );
+		}
+	}
+}

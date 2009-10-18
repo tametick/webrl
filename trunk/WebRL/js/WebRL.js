@@ -98,8 +98,14 @@ $(document).keydown(function(e) {
 var Player = function(name) {
 	var rv = Mobile(name, "@", [240, 240, 240], 100, new Faction( 'player' ) );
 
+	rv.isPlayer = true;
+
 	rv.message = function(msg) {
 		msgLog.append( msg );
+	}
+
+	rv.didMove = function() {
+		this.tile.map.setScent( this.tile, 40 );
 	}
 
 	return rv;
@@ -115,6 +121,7 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 			this.tile.mobileLeave();
 			newtile.mobileEnter(this);
 			this.tile = newtile;
+			this.didMove();
 		} else if (newtile != null && newtile.mobile) {
 			this.tryAttack(newtile.mobile);
 		} else {
@@ -169,7 +176,8 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 		distanceTo: distanceTo,
 		damage: damage,
 
-		message: function() {}
+		message: function() {},
+		didMove: function() {},
 	};
 	
 	return rv;

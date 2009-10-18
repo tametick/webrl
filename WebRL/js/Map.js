@@ -29,7 +29,6 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		}
 	}
 
-	
 	return {
 		map: map,
 		x: x,
@@ -134,19 +133,43 @@ var Map = function(width, height) {
 		creature.map = this;
 	}
 
-	var tilesMD = [];
-	for(var x=0;x<width;x++) {
-		tilesMD[x] = [];
-		for(var y=0;y<height;y++) {
-			tilesMD[x].push( tiles[[x,y]] );
+	var setScent = function( originTile, strength ) {
+		if( this.scentedTiles ) {
+			for(var xy in this.scentedTiles ) {
+				this.scentedTiles[xy].scentDirection = null;
+			}
+		}
+		originTile.scentDirection = [ 0, 0 ];
+		var currentGen = [ originTile ];
+		this.scentedTiles = [ originTile ];
+		var nextGen = [];
+		var dxt=[-1,0,1,-1,1,-1,0,1];
+		var dyt=[-1,-1,-1,0,0,1,1,1];
+		while( currentGen.length > 0 && --strength > 0 ) {
+			for(var i=0;i<currentGen.length;i++) {
+				var x = currentGen[i].x;
+				var y = currentGen[i].y;
+				for(var j=0;j<8;j++) {
+					var nextTile = this.getTile( x + dxt[j], y + dyt[j] );
+					if( nextTile && nextTile.traversible && nextTile.scentDirection == null ) {
+						nextTile.scentDirection = [ -dxt[j], -dyt[j] ];
+						nextGen.push( nextTile );
+						this.scentedTiles.push( nextTile );
+					}
+				}
+			}
+			currentGen = nextGen;
+			nextGen = [];
 		}
 	}
 
 	return {
 		tiles: tiles,
-		tilesMD: tilesMD,
 		creatures: creatures,
 		controllers: controllers,
+
+		width: width,
+		height: height,
 
 		dx: null,
 		dy: null,
@@ -158,6 +181,7 @@ var Map = function(width, height) {
 		setTile: setTile,
 		removeCreature: removeCreature,
 		addCreature: addCreature,
+		setScent: setScent,
 	};
 }
 

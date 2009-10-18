@@ -68,7 +68,7 @@ var MapGen = function(map, width, height, seed) {
 			var monster = Mobile("Monster", 'M', [100, 160, 120], Math.random() * 10 + 10, new Faction(1));
 			this.map.addCreature(monster, openTiles[i][0], openTiles[i][1]);
 
-			var hunter = new KillAllAI(monster, this.map);
+			var hunter = new ScentFollowerAI(monster, this.map);
 			this.map.controllers.push(hunter);
 			
 			openTiles.slice(i, i);

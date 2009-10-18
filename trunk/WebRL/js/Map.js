@@ -24,6 +24,9 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 	var paint = function(sx, sy) {
 		if (this.mobile) {
 			scr.putCell(sx, sy, this.mobile.symbol, this.mobile.color);
+		} else if( this.items.length > 0 ) {
+			var item = this.items[ this.items.length - 1 ];
+			scr.putCell(sx, sy, item.symbol, item.color);
 		} else {
 			scr.putCell(sx, sy, this.symbol, this.color);
 		}
@@ -38,6 +41,7 @@ var Tile = function(map, symbol, color, x, y, traversible) {
 		symbol: scr.symbol( symbol ),
 		color: scr.colour( color ),
 		mobile: null,
+		items: [],
 		
 		mayEnter: mayEnter,
 		mobileEnter: mobileEnter,

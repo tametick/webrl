@@ -35,7 +35,7 @@ $(document).ready(function() {
 		mapGen.map.addCreature(player, mapGen.spawnX, mapGen.spawnY);
 	});
 	startupLoader.schedule(function() {
-		mapGen.populateMap(5);
+		mapGen.populateMap(5, 10);
 	});
 	startupLoader.schedule(function() {
 		updateDisplay();
@@ -73,7 +73,7 @@ $(document).keydown(function(e) {
 				
 				mapGen.generateMap('digDug');
 				player.changeMap(mapGen.map, mapGen.spawnX, mapGen.spawnY);
-				mapGen.populateMap(5);
+				mapGen.populateMap(5, 10);
 				
 				msgLog.append("Entered dungeon level: " + maps.mapList.length + ", at: " + mapGen.spawnX + ", " + mapGen.spawnY);
 			}, function() {
@@ -82,6 +82,20 @@ $(document).keydown(function(e) {
 			
 			loader.load();
 			return false;
+		case 188: // ','
+			if( player.tile && player.tile.items.length > 0 ) {
+				var item = player.tile.items.pop();
+				player.inventory.add( item );
+				player.message( "You pick up the " + item.name + "." );
+			}
+			break;
+		case 68: // ','
+			if( player.tile && player.inventory.items.length > 0 ) {
+				var item = player.inventory.items[ player.inventory.items.length - 1 ];
+				player.tile.items.push( player.inventory.remove( item ) );
+				player.message( "You drop the " + item.name + "." );
+			}
+			break;
 		default:
 			return true;
 	}
@@ -106,6 +120,15 @@ var Player = function(name) {
 
 	rv.didMove = function() {
 		this.tile.map.setScent( this.tile, 40 );
+		if( this.tile.items.length > 0 ) {
+			var item = this.tile.items[ this.tile.items.length - 1 ];
+			if( this.tile.items.length > 1 ) {
+				var msg = "Among other things, a " + item.name + " is lying on the ground here.";
+			} else {
+				var msg = "A " + item.name + " is lying on the ground here.";
+			}
+			this.message( msg );
+		}
 	}
 
 	return rv;
@@ -128,7 +151,7 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 			this.message( "Blocked!" );
 		}
 	}
-	
+
 	var changeMap = function(map, x, y) {
 		if (this.map) 
 			this.map.removeCreature(this);
@@ -169,6 +192,8 @@ var Mobile = function(name, symbol, color, maxHp, faction) {
 		dead: false,
 		name: name,
 		faction: faction,
+
+		inventory: Inventory(),
 		
 		tryMove: tryMove,
 		changeMap: changeMap,

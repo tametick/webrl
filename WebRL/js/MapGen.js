@@ -51,19 +51,20 @@ var MapGen = function(map, width, height, seed) {
 	}
 	
 	// Could be anything for the args as well.
-	var populateMap = function(args) {
+	var populateMap = function(monsters, items) {
 		// Just an example of populating a map, eventually the level of the dungeon and
 		// and stuff can take a role. Possibly putting this into a class.
 		var openTiles = [];
 		
 		for (var x = 0; x < width; x++) {
 			for (var y = 0; y < height; y++) {
-				if (map.getTile(x, y).traversible)
+				if (map.getTile(x, y).traversible) {
 					openTiles.push([x, y]);
+				}
 			}
 		}
 		
-		for (var m = 0; m < args; ++m) {
+		for (var m = 0; m < monsters; ++m) {
 			var i = Math.floor(mt.genrand_real2() * openTiles.length);
 			var monster = Mobile("Monster", 'M', [100, 160, 120], Math.random() * 10 + 10, new Faction(1));
 			this.map.addCreature(monster, openTiles[i][0], openTiles[i][1]);
@@ -72,6 +73,15 @@ var MapGen = function(map, width, height, seed) {
 			this.map.controllers.push(hunter);
 			
 			openTiles.slice(i, i);
+		}
+
+		for (var m = 0; m < items; ++m) {
+			var i = Math.floor(mt.genrand_real2() * openTiles.length);
+			var x = openTiles[i][0];
+			var y = openTiles[i][1];
+			openTiles.slice(i, i);
+
+			this.map.getTile(x,y).items.push( generateItem() );
 		}
 	}
 	

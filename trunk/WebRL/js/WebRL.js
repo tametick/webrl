@@ -51,18 +51,6 @@ $(document).keydown(function(e) {
 
 	
 	switch (code) {
-		case 37:
-			player.tryMove(-1, 0);
-			break;
-		case 38:
-			player.tryMove(0, -1);
-			break;
-		case 39:
-			player.tryMove(1, 0);
-			break;
-		case 40:
-			player.tryMove(0, 1);
-			break;
 		// Test code, generates a new level after pressing 'r'
 		case 82: // 'r'
 			var loader = LoadingScreen(function() {
@@ -95,6 +83,38 @@ $(document).keydown(function(e) {
 				player.tile.items.push( player.inventory.remove( item ) );
 				player.message( "You drop the " + item.name + "." );
 			}
+			break;
+		case 72: // 'h'
+		case 37: case 52:
+			player.tryMove(-1, 0);
+			break;
+		case 74: // 'j'
+		case 40: case 50:
+			player.tryMove(0, 1);
+			break;
+		case 75: // 'k'
+		case 38: case 56:
+			player.tryMove(0, -1);
+			break;
+		case 76: // 'l'
+		case 39: case 54:
+			player.tryMove(1, 0);
+			break;
+		case 89: // 'y'
+		case 55:
+			player.tryMove(-1, -1);
+			break;
+		case 85: // 'u'
+		case 57:
+			player.tryMove(1, -1);
+			break;
+		case 66: // 'b'
+		case 49:
+			player.tryMove(-1, 1);
+			break;
+		case 78: // 'n'
+		case 51:
+			player.tryMove(1, 1);
 			break;
 		default:
 			return true;
